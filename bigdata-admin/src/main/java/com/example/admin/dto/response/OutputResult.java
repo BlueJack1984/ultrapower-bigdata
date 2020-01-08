@@ -4,9 +4,11 @@ import com.example.core.constants.ResponseCode;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.Serializable;
+
 @Slf4j
 @Data
-public class OutputResult<T> {
+public class OutputResult<T> implements Serializable {
 
     private Integer code = 200;
 
