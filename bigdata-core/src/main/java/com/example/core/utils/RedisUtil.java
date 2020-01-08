@@ -89,6 +89,15 @@ public final class RedisUtil {
      **********************************************************************************/
 
     /**
+     * 普通缓存获取
+     * @param key 键
+     * @return 值
+     */
+    public Object get(String key) {
+        return key == null ? null : redisTemplate.opsForValue().get(key);
+    }
+
+    /**
      * 普通缓存放入
      * @param key   键
      * @param value 值
@@ -184,15 +193,5 @@ public final class RedisUtil {
             throw new ClassCastException("类转化异常");
         }
         return (T) obj;
-    }
-
-    /**
-     * 获取泛型
-     *
-     * @param key 键
-     * @return 值
-     */
-    public static Object get(String key) {
-        return key == null ? null : redisTemplate.opsForValue().get(key);
     }
 }
