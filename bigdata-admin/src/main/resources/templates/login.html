@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <style>
+        /*a标签去下划线和点击不变色，div内容居中*/
+        a{
+            text-decoration: none;
+            color: #333333;
+        }
+        #idiv{text-align: center;border-radius: 20px;
+            width: 300px;
+            height: 350px;
+            margin: auto;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;}
+    </style>
+</head>
+<body>
+<div id="idiv">
+    请输入用户账号与密码登录
+    <form action="/security/login" method="post" >
+        用户账号：<input type="text" name="account" /><br>
+        密&nbsp;&nbsp;&nbsp;码：<input type="password" name="password" /><br>
+        <input type="submit" value="登录" />
+        <a href="/security/toRegister" target="_blank">注册</a>
+    </form>
+</div>
+</body>
+</html>

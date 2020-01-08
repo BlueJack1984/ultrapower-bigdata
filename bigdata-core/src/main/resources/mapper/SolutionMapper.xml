@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.core.dao.ISolutionDao">
+  <sql id="c_solution">
+    <!--最基础属性-->
+    _solution.id, _solution.status, _solution.create_time createTime, _solution.update_time updateTime,
+    <!--通用属性-->
+    _solution.logic_type logicType, _solution.corporation_id corporationId,
+    _solution.introduction, _solution.name, _solution.version, _solution.abbreviation,
+    _solution.logo_url logoUrl, _solution.primary_category_id primaryCategoryId,
+    _solution.based_frameworks basedFrameworks, _solution.core_functionality coreFunctionality,
+    _solution.detailed_description detailedDescription, _solution.district,
+    _solution.safety_issue safetyIssue, _solution.performance,
+    _solution.application_field_ids applicationFieldIds,
+    <!--特有属性-->
+    _solution.product_ids productIds, _solution.application_case_ids applicationCaseIds,
+    _solution.publish_date publishDate,_solution.certification_status certificationStatus
+  </sql>
+  <sql id="t_solution">
+    solution
+  </sql>
+  <select id="selectById" parameterType="java.lang.Long" resultType="com.example.core.entity.Solution">
+    select <include refid="c_solution" />
+    from <include refid="t_solution"/> _solution
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+<!--  <insert id="insert" parameterType="user" >-->
+<!--    insert into <include refid="t_user"/>-->
+<!--    (id, account, password, super_password, real_name, identity_number, nick_name, head_image, phone,-->
+<!--    email, gender, rank_id, status, question_id, answer, last_login_ip, last_login_time, create_time,-->
+<!--    create_user_id, update_time, update_user_id, province, city, address, current_login_ip, current_login_time, certification_time)-->
+<!--    values (#{id}, #{account}, #{password}, #{superPassword}, #{realName}, #{identityNumber}, #{nickName},-->
+<!--    #{headImage}, #{phone}, #{email}, #{gender}, #{rankId}, #{status}, #{questionId}, #{answer},-->
+<!--    #{lastLoginIp}, #{lastLoginTime}, #{createTime}, #{createUserId}, #{updateTime}, #{updateUserId},-->
+<!--    #{province}, #{city}, #{address}, #{currentLoginIp}, #{currentLoginTime}, #{certificationTime})-->
+<!--  </insert>-->
+</mapper>
