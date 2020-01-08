@@ -2,15 +2,15 @@ package com.example.core.utils;
 
 import java.util.Random;
 /**
- * @Author liuliying@ultrapower.com.cn
+ * @Author
  * @Description 随机生成验证码工具类
- * @Date 11:05 2020/1/6
+ * @Date
  **/
 public class CharUtil {
     /**
-     * @Author liuliying@ultrapower.com.cn
+     * @Author
      * @Description 生成带字母数字混合的字符串验证码
-     * @Date 11:15 2020/1/6
+     * @Date
      * @Param 验证码长度
      * @return 验证码
      **/
@@ -25,7 +25,7 @@ public class CharUtil {
         return sb.toString();
     }
     /**
-     * @Author liuliying@ultrapower.com.cn
+     * @Author
      * @Description 生成纯数字的验证码
      * @Date 11:15 2020/1/6
      * @Param 验证码长度
