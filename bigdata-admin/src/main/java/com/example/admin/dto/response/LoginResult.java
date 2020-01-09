@@ -12,8 +12,10 @@ import java.io.Serializable;
 @Data
 public class LoginResult implements Serializable {
 
-    private String token;
+    private Long userId;
 
-    private String loginKey;
+    private Integer targetType;
+
+    private String account;
 
 }

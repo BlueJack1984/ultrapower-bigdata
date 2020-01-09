@@ -1,4 +1,4 @@
-package com.example.admin.config.login;
+package com.example.admin.config.login.token;
 
 
 import com.alibaba.fastjson.JSON;

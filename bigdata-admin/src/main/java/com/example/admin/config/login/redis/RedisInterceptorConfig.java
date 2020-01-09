@@ -1,5 +1,6 @@
-package com.example.admin.config.login;
+package com.example.admin.config.login.redis;
 
+import com.example.admin.config.login.token.TokenInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -11,8 +12,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @date 2019-12-23
  */
 @Configuration
-public class TokenInterceptorConfig implements WebMvcConfigurer {
-
+public class RedisInterceptorConfig implements WebMvcConfigurer {
     /**
      * 添加拦截器
      * @param registry
@@ -32,5 +32,3 @@ public class TokenInterceptorConfig implements WebMvcConfigurer {
         return new TokenInterceptor();
     }
 }
-
-

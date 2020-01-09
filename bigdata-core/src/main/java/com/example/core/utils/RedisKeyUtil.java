@@ -31,11 +31,15 @@ public final class RedisKeyUtil {
      *
      * @return
      */
-    public String generateLoginKey() {
+    public String generateLoginKey(Long userId) {
 
         /**
          * login:userId:数值
          */
-        return null;
+        if(null == userId) {
+            //log.error(null, null);
+            return null;
+        }
+        return userId.toString();
     }
 }

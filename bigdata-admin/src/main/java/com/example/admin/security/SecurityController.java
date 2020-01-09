@@ -6,6 +6,8 @@ import com.example.admin.dto.response.OutputResult;
 import com.example.core.entity.User;
 import com.example.core.service.IUserService;
 import com.example.core.utils.DESUtil;
+import com.example.core.utils.RedisKeyUtil;
+import com.example.core.utils.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +27,8 @@ public class SecurityController {
 
     private final IUserService userService;
     private final DESUtil desUtil;
+    private final RedisKeyUtil redisKeyUtil;
+    private final RedisUtil redisUtil;
 
     /**
      * 账号登录
@@ -38,29 +42,28 @@ public class SecurityController {
         String account = loginInput.getAccount();
         User user = userService.getByAccount(account);
         if(null == user) {
-
+            //log.error(null, null);
+            //返回用户不存在的code和message
+            return new OutputResult<>(null, null);
         }
         String password = loginInput.getPassword();
         String encryptedPassword = desUtil.getEncryptString(password);
-        if(encryptedPassword.equals(user.getPassword())) {
-
+        if(! encryptedPassword.equals(user.getPassword())) {
+            //log.error(null, null);
+            //返回用户密码输入错误的code和message
+            return new OutputResult<>(null, null);
         }
-        return new OutputResult<>(null);
-//        Map<String, Object> map = new HashMap<>();
-//        String username = sysUser.getUsername();
-//        String password = sysUser.getPassword();
-//        if (sysUserService.login(username, password)){
-//            String token = TokenUtil.sign(username,password);
-//            if (token != null){
-//                map.put("code", "10000");
-//                map.put("message","认证成功");
-//                map.put("token", token);
-//                return null;
-//            }
-//        }
-//        map.put("code", "00000");
-//        map.put("message","认证失败");
-        //return null;
+        //用户名和密码均正确
+        LoginResult loginResult = new LoginResult();
+        Long userId = user.getId();
+        String loginKey = redisKeyUtil.generateLoginKey(userId);
+        //存入到redis中，用户id作为key，account作为value
+        redisUtil.set(loginKey, account, 100000);
+        //将相关信息组装返回
+        loginResult.setUserId(userId);
+        loginResult.setTargetType(user.getTargetType());
+        loginResult.setAccount(account);
+        return new OutputResult<>(loginResult);
     }
 
     /**
