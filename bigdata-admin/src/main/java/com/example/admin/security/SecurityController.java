@@ -1,9 +1,11 @@
 package com.example.admin.security;
 
 import com.example.admin.dto.request.LoginInput;
+import com.example.admin.dto.response.LoginResult;
 import com.example.admin.dto.response.OutputResult;
 import com.example.core.entity.User;
 import com.example.core.service.IUserService;
+import com.example.core.utils.DESUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,7 @@ import javax.validation.Valid;
 public class SecurityController {
 
     private final IUserService userService;
+    private final DESUtil desUtil;
 
     /**
      * 账号登录
@@ -30,7 +33,7 @@ public class SecurityController {
      * 和数据库比对如果无误的话，签发token，并返回给前端。
      */
     @PostMapping("/login")
-    public String login(@RequestBody @Valid LoginInput loginInput) {
+    public OutputResult<LoginResult> login(@RequestBody @Valid LoginInput loginInput) {
 
         String account = loginInput.getAccount();
         User user = userService.getByAccount(account);
@@ -38,6 +41,11 @@ public class SecurityController {
 
         }
         String password = loginInput.getPassword();
+        String encryptedPassword = desUtil.getEncryptString(password);
+        if(encryptedPassword.equals(user.getPassword())) {
+
+        }
+        return new OutputResult<>(null);
 //        Map<String, Object> map = new HashMap<>();
 //        String username = sysUser.getUsername();
 //        String password = sysUser.getPassword();
@@ -52,7 +60,7 @@ public class SecurityController {
 //        }
 //        map.put("code", "00000");
 //        map.put("message","认证失败");
-        return null;
+        //return null;
     }
 
     /**
