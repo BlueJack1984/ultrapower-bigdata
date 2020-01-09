@@ -5,8 +5,6 @@ import com.example.admin.dto.response.OutputResult;
 import com.example.core.constants.AnonymousAccessUrl;
 import com.example.core.constants.ResponseCode;
 import com.example.core.utils.RedisUtil;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

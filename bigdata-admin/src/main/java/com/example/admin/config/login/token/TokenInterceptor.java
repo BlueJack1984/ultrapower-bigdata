@@ -23,12 +23,12 @@ import java.io.PrintWriter;
  * @author daniel
  * @date 2019-12-23
  */
-@Component
-@Slf4j
-public class TokenInterceptor implements HandlerInterceptor {
-
-    @Value("${request.header.token.key}")
-    private String tokenKey;
+//@Component
+//@Slf4j
+//public class TokenInterceptor implements HandlerInterceptor {
+//
+//    @Value("${request.header.token.key}")
+//    private String tokenKey;
 
 //    /**
 //     * 在请求被处理之前拦截请求，查看请求头是否携带token，进行处理
@@ -98,4 +98,4 @@ public class TokenInterceptor implements HandlerInterceptor {
 //            e.printStackTrace();
 //        }
 //    }
-}
+//}
