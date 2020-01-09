@@ -1,11 +1,14 @@
 package com.example.admin.security;
 
+import com.example.admin.dto.request.LoginInput;
 import com.example.admin.dto.response.OutputResult;
 import com.example.core.entity.User;
 import com.example.core.service.IUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 /**
  * 安全、登录等相关接口
@@ -27,7 +30,8 @@ public class SecurityController {
      * 和数据库比对如果无误的话，签发token，并返回给前端。
      */
     @PostMapping("/login")
-    public String login(@RequestBody User sysUser) {
+    public String login(@RequestBody @Valid LoginInput loginInput) {
+
 
 //        Map<String, Object> map = new HashMap<>();
 //        String username = sysUser.getUsername();
