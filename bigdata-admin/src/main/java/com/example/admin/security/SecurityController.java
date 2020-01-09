@@ -32,7 +32,12 @@ public class SecurityController {
     @PostMapping("/login")
     public String login(@RequestBody @Valid LoginInput loginInput) {
 
+        String account = loginInput.getAccount();
+        User user = userService.getByAccount(account);
+        if(null == user) {
 
+        }
+        String password = loginInput.getPassword();
 //        Map<String, Object> map = new HashMap<>();
 //        String username = sysUser.getUsername();
 //        String password = sysUser.getPassword();
