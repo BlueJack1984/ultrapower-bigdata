@@ -5,10 +5,11 @@ import com.example.admin.dto.response.OutputResult;
 import com.example.core.constants.AnonymousAccessUrl;
 import com.example.core.constants.ResponseCode;
 import com.example.core.utils.RedisUtil;
-import com.example.core.utils.TokenUtil;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -25,10 +26,12 @@ import java.io.PrintWriter;
  */
 @Component
 @Slf4j
-@RequiredArgsConstructor
 public class RedisInterceptor implements HandlerInterceptor {
 
-    private final RedisUtil redisUtil;
+    @Autowired
+    private RedisUtil redisUtil;
+
+    private final String USER_ID = "userId";
 
     /**
      * 在请求被处理之前拦截请求，查看请求头是否携带token，进行处理
@@ -49,7 +52,6 @@ public class RedisInterceptor implements HandlerInterceptor {
             log.info("handler处理器没有映射到方法，给予通过！");
             return true;
         }
-
         //此处为不需要登录的接口地址放行
         String visitedUrl = request.getRequestURI();
         if(visitedUrl.contains(AnonymousAccessUrl.LOGIN) || visitedUrl.contains(AnonymousAccessUrl.REGISTRATION)) {
@@ -57,24 +59,22 @@ public class RedisInterceptor implements HandlerInterceptor {
             log.info("表示用户为登录或者注册，给予通过");
             return true;
         }
-
-        //接下来判断请求实体头部中是否含有token数据
-        log.info("判断请求实体头部中是否含有token数据");
-        String tokenVal = request.getHeader(null);
-        if(StringUtils.isEmpty(tokenVal)) {
-            log.info("请求实体头部中token数据为空，表示用户还没登录或者token过期，无法通过！");
+        //接下来判断请求实体头部中是否含有用户标识
+        log.info("判断请求实体头部中是否含有用户标识");
+        String userId = request.getHeader(USER_ID);
+        if(StringUtils.isEmpty(userId)) {
+            log.info("请求实体头部中token数据为空，表示用户还没登录，无法通过！");
             //返回响应实体,ResponseCode对应为token数据为空
             makeResponse(response, ResponseCode.ERROR);
             return false;
         }
-        redisUtil.exists(tokenVal);
-        log.info("请求实体头部存在token参数, 将在JWT中进行校验！");
-        Boolean validationResult = TokenUtil.verify(tokenVal);
-        if(validationResult) {
-            log.info("token参数在JWT中校验通过，给予通过！");
+        log.info("请求实体头部存在用户标识, 将在redis中检查是否存在和过期！");
+        Boolean isExist = redisUtil.exists(userId);
+        if(isExist) {
+            log.info("用户标识在redis中校验通过，给予通过！");
             return true;
         }
-        log.info("token参数在JWT中校验失败，判断token参数为非法数据，请仔细检查！");
+        log.info("用户标识在redis中校验失败，判断数据在redis中过期消失，请仔细检查！");
         //非法参数的错误
         makeResponse(response, ResponseCode.ILLEGAL);
         return false;
