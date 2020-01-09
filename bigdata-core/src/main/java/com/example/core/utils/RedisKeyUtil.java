@@ -17,6 +17,10 @@ public final class RedisKeyUtil {
      * @return
      */
     public String generateCaptchaKey() {
+
+        /**
+         * captcha:id:数值
+         */
         return null;
     }
 
@@ -25,6 +29,10 @@ public final class RedisKeyUtil {
      * @return
      */
     public String generateLoginKey() {
+
+        /**
+         * login:userId:数值
+         */
         return null;
     }
 }
