@@ -2,12 +2,13 @@ package com.example.admin.controller;
 
 import com.example.admin.dto.response.CaptchaResult;
 import com.example.admin.dto.response.OutputResult;
+import com.example.core.service.IRabbitmqService;
 import com.example.core.utils.CaptchaUtil;
 import com.example.core.utils.RedisKeyUtil;
+import com.example.core.utils.RedisUtil;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,7 +26,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/captcha")
 public class CaptchaController {
 
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final RedisUtil redisUtil;
+    private final IRabbitmqService rabbitmqService;
     /**
      * redis的key操作工具类
      */
@@ -43,6 +45,10 @@ public class CaptchaController {
         captchaResult.setCaptchaKey(captchaKey);
         String captchaValue = captchaUtil.generateMix(count);
         captchaResult.setCaptchaValue(captchaValue);
+        //获取的验证码需要通过短信发送到手机
+        rabbitmqService.sendByFanout();
+        //获取的验证码也需要存到redis中
+        redisUtil.set(captchaKey, captchaValue, 1000);
         return new OutputResult(captchaResult);
     }
 }
