@@ -16,14 +16,25 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = false)
 public class Sequence implements Serializable {
 
+    /**
+     * 队列名称
+     */
     private String name;
-
+    /**
+     * 当前队列值
+     */
     private Long currentValue;
-
+    /**
+     * 队列递增步长
+     */
     private Integer increment;
-
+    /**
+     * 队列最大值
+     */
     private Long maxValue;
-
+    /**
+     * 队列初始值
+     */
     private Long initialValue;
 
 //--创建序列表<br>create table sequence(
