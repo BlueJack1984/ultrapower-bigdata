@@ -16,5 +16,29 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = false)
 public class Sequence implements Serializable {
 
+    private String name;
 
+    private Long currentValue;
+
+    private Integer increment;
+
+    private Long maxValue;
+
+    private Long initialValue;
+
+//--创建序列表<br>create table sequence(
+//            name varchar(50) not null primary key,
+//    current_value BIGINT not null DEFAULT 0,
+//    increment int not null DEFAULT 1,
+//    max_value BIGINT,  -- 最大值
+//    initial_value BIGINT, -- 初始值，当当前值大于最大值，回到初始值
+//    key (name)
+//);
+//    DROP TABLE IF EXISTS sequence;
+//    CREATE TABLE sequence (
+//            name VARCHAR(50) NOT NULL,
+//    current_value INT NOT NULL,
+//    increment INT NOT NULL DEFAULT 1,
+//    PRIMARY KEY (name)
+//) ENGINE=InnoDB;
 }
