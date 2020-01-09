@@ -1,5 +1,7 @@
 package com.example.core.utils;
 
+import com.example.core.service.ISequenceService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -10,18 +12,19 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public final class RedisKeyUtil {
 
+    private final ISequenceService sequenceService;
+
     /**
-     *
      * @return
      */
     public String generateCaptchaKey() {
 
-        /**
-         * captcha:id:数值
-         */
-        return null;
+        String tradeNumber = sequenceService.generateTradeNumber();
+        String captchaKey = "captcha:" + tradeNumber;
+        return captchaKey;
     }
 
     /**

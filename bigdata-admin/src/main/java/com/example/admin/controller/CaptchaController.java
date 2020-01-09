@@ -25,9 +25,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/captcha")
 public class CaptchaController {
-
+    /**
+     * redis的key操作工具类
+     */
     private final RedisUtil redisUtil;
-    private final IRabbitmqService rabbitmqService;
     /**
      * redis的key操作工具类
      */
@@ -36,6 +37,10 @@ public class CaptchaController {
      * redis的key操作工具类
      */
     private final CaptchaUtil captchaUtil;
+    /**
+     * redis的key操作工具类
+     */
+    private final IRabbitmqService rabbitmqService;
 
     @GetMapping("/generate/{count}")
     public OutputResult<CaptchaResult> generate(@PathVariable("count") Integer count) {
