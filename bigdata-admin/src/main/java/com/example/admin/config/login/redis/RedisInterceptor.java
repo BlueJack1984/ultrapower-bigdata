@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.example.admin.dto.response.OutputResult;
 import com.example.core.constants.AnonymousAccessUrl;
 import com.example.core.constants.ResponseCode;
+import com.example.core.utils.RedisUtil;
 import com.example.core.utils.TokenUtil;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -23,8 +25,10 @@ import java.io.PrintWriter;
  */
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class RedisInterceptor implements HandlerInterceptor {
 
+    private final RedisUtil redisUtil;
 
     /**
      * 在请求被处理之前拦截请求，查看请求头是否携带token，进行处理
@@ -63,6 +67,7 @@ public class RedisInterceptor implements HandlerInterceptor {
             makeResponse(response, ResponseCode.ERROR);
             return false;
         }
+        redisUtil.exists(tokenVal);
         log.info("请求实体头部存在token参数, 将在JWT中进行校验！");
         Boolean validationResult = TokenUtil.verify(tokenVal);
         if(validationResult) {
