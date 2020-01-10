@@ -31,6 +31,8 @@
         <swagger2-version>2.9.2</swagger2-version>
         <jackson-datatype-version>2.10.1</jackson-datatype-version>
         <redis-lettuce-pool-version>2.8.0</redis-lettuce-pool-version>
+        <commons-io-version>2.6</commons-io-version>
+        <commons-fileupload-version>1.4</commons-fileupload-version>
     </properties>
 
     <!-- 模块说明：这里声明多个子模块 -->
@@ -125,6 +127,17 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-pool2</artifactId>
                 <version>${redis-lettuce-pool-version}</version>
+            </dependency>
+            <!-- 文件图片上传相关依赖 -->
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons-io-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-fileupload</groupId>
+                <artifactId>commons-fileupload</artifactId>
+                <version>${commons-fileupload-version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
