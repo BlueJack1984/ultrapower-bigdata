@@ -7,6 +7,9 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistration
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 配置拦截器 对登录和注册界面的请求不拦截
  * @author daniel
@@ -22,10 +25,13 @@ public class RedisInterceptorConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         InterceptorRegistration registration = registry.addInterceptor(new RedisInterceptor());
         registration.addPathPatterns("/**");
-        registration.excludePathPatterns(
-                AnonymousAccessUrl.LOGIN,
-                AnonymousAccessUrl.REGISTRATION,
-                AnonymousAccessUrl.CAPTCHA);
+//        registration.excludePathPatterns(
+//                AnonymousAccessUrl.LOGIN,
+//                AnonymousAccessUrl.REGISTRATION,
+//                AnonymousAccessUrl.CAPTCHA);
+        List<String> excludePathList = new ArrayList<>();
+        excludePathList.add("/captcha/**");
+        registration.excludePathPatterns(excludePathList);
         //registration.excludePathPatterns("/**");
     }
 

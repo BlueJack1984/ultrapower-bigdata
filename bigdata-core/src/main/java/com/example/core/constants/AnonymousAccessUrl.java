@@ -10,7 +10,7 @@ public class AnonymousAccessUrl {
     /**
      * 登录接口
      */
-    public static final String LOGIN = "/login";
+    public static final String LOGIN = "/security/login/**";
     /**
      * 注册接口
      */
