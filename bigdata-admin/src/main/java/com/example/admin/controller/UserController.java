@@ -82,8 +82,14 @@ public class UserController {
         return null;
     }
 
+    /**
+     * 锁定用户，删除用户等功能
+     * 更改数据库的status字段值实现
+     * @return
+     */
     @GetMapping("/status/modify")
-    public OutputResult<User> modifyStatus(@RequestBody @Valid UserInput userInput) {
+    public OutputResult<User> modifyStatus() {
+
 
         return null;
     }
