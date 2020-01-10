@@ -1,9 +1,11 @@
 package com.example.admin.controller;
 
 import com.example.admin.dto.request.UserInput;
+import com.example.admin.dto.response.OutputListResult;
 import com.example.admin.dto.response.OutputResult;
 import com.example.core.entity.User;
 import com.example.core.service.IUserService;
+import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -40,6 +42,17 @@ public class UserController {
         User user = userService.getById(id);
         return user;
     }
+
+    @ApiOperation(value = "用户登录功能实现", notes = "用户登录功能实现")
+    @ApiImplicitParams({@ApiImplicitParam(paramType = "body", dataType = "LoginInput", name = "loginInput", value = "登录输入参数", required = true)})
+    @CrossOrigin
+    @GetMapping("/get/{id}")
+    public OutputListResult<User> getByConditionPage() {
+
+        PageInfo<User> pageInfo = null;
+        return new OutputListResult<>(pageInfo);
+    }
+
 
     /**
      *
