@@ -7,6 +7,7 @@ import com.example.admin.dto.response.OutputResult;
 import com.example.core.entity.User;
 import com.example.core.service.IUserService;
 import com.example.core.utils.DESUtil;
+import com.example.core.utils.PhoneFormatCheckUtil;
 import com.example.core.utils.RedisKeyUtil;
 import com.example.core.utils.RedisUtil;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 安全、登录等相关接口
@@ -30,6 +33,7 @@ public class SecurityController {
     private final DESUtil desUtil;
     private final RedisKeyUtil redisKeyUtil;
     private final RedisUtil redisUtil;
+    private final PhoneFormatCheckUtil phoneFormatCheckUtil;
 
     /**
      * 账号登录
@@ -71,18 +75,73 @@ public class SecurityController {
      * 账号注销
      */
     @GetMapping("/logout")
-    public OutputResult<String> logout(@RequestHeader(value = "_current_id") Long currentId) {
-        //暂时没有业务，这里应该进行使token失效的操作
-        return new OutputResult<>("用户成功退出：" + currentId);
+    public OutputResult<String> logout(@RequestHeader(value = "currentUserId") Long currentUserId) {
+        //删除redis中记录的登录信息键值对
+        String redisLoginKey = currentUserId.toString();
+        redisUtil.delete(redisLoginKey);
+        return new OutputResult<>("用户成功退出：" + currentUserId);
     }
 
     /**
-     * 账号注册
+     * 账号注册,只能是企业账号
      * 用户数据验证登录结果,返回注册成功结果
      */
     @PostMapping("/register")
-    public OutputResult<String> register(@RequestBody @Valid RegisterInput registerInput) {
+    public OutputResult<Void> register(@RequestBody @Valid RegisterInput registerInput) {
 
-        return null;
+        //手机号作为账号，格式验证
+        String phoneNumber = registerInput.getPhoneNumber();
+        try {
+            Boolean validationResult = phoneFormatCheckUtil.isPhoneLegal(phoneNumber);
+            if(! validationResult) {
+                //log.error(null, null);
+                return new OutputResult<>(201, "");
+            }
+        }catch (Exception ex) {
+            //log.error(null, null);
+            return new OutputResult<>();
+        }
+        //手机号是否已经注册
+        List<User> userList = userService.getListAll();
+        if(null != userList && userList.size() > 0) {
+            //遍历是否有已注册手机号
+            for(User user : userList) {
+                String account = user.getAccount();
+                if(phoneNumber.equals(account)) {
+                    //log.error(null, null);
+                    return new OutputResult<>(201, "");
+                }
+            }
+        }
+        //输入密码与确认密码是否一致
+        String password = registerInput.getPassword();
+        String confirmPassword = registerInput.getConfirmPassword();
+        if(! password.equals(confirmPassword)) {
+            //log.error(null, null);
+            return new OutputResult<>(202, "");
+        }
+        //验证码是否正确
+        String captcha = registerInput.getCaptcha();
+        String storedCaptcha = redisUtil.get(registerInput.getCaptchaKey(), String.class);
+        if(! captcha.equals(storedCaptcha)) {
+            //log.error(null, null);
+            return new OutputResult<>(202, "");
+        }
+        //各项信息正确
+        //密码加密
+        String encryptedPassword = desUtil.getEncryptString(password);
+        //将注册信息存入数据库
+        User user = new User();
+        user.setAccount(phoneNumber);
+        user.setPassword(encryptedPassword);
+        user.setStatus(0);
+        user.setTargetType(0);
+        user.setCreateTime(new Date());
+        user.setUpdateTime(new Date());
+        userService.add(user);
+        //将redis中的对应键值对删除, 不删除也可以，到期自动消失
+        redisUtil.delete(registerInput.getCaptchaKey());
+        //返回成功结果
+        return new OutputResult<>();
     }
 }

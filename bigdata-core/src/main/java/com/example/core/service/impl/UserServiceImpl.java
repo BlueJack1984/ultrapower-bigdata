@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -55,5 +56,10 @@ public class UserServiceImpl implements IUserService {
         user1.setUpdateTime(new Date());
         userDao.insert(user1);
         return user1;
+    }
+
+    @Override
+    public List<User> getListAll() {
+        return null;
     }
 }
