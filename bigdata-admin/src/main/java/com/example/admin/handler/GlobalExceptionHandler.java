@@ -31,6 +31,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     public OutputResult<Void> MyExceptionHandle(MethodArgumentNotValidException exception){
+
         exception.printStackTrace();
         BindingResult result = exception.getBindingResult();
         StringBuilder errorMsg = new StringBuilder() ;
