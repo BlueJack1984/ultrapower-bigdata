@@ -81,4 +81,10 @@ public class UserController {
 
         return null;
     }
+
+    @GetMapping("/status/modify")
+    public OutputResult<User> modifyStatus(@RequestBody @Valid UserInput userInput) {
+
+        return null;
+    }
 }

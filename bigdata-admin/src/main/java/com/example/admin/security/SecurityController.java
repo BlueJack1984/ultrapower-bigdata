@@ -138,7 +138,7 @@ public class SecurityController {
         user.setTargetType(0);
         user.setCreateTime(new Date());
         user.setUpdateTime(new Date());
-        userService.add(user);
+        //userService.add(user);
         //将redis中的对应键值对删除, 不删除也可以，到期自动消失
         redisUtil.delete(registerInput.getCaptchaKey());
         //返回成功结果

@@ -62,4 +62,9 @@ public class UserServiceImpl implements IUserService {
     public List<User> getListAll() {
         return null;
     }
+
+    @Override
+    public User modify(User user) {
+        return null;
+    }
 }
