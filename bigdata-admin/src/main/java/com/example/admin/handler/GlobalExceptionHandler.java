@@ -7,6 +7,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.List;
 
@@ -15,11 +16,10 @@ import java.util.List;
  * @author daniel
  * @date 2019-12-30
  */
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = Exception.class)
-    @ResponseBody
     public OutputResult<Void> handle() {
         return null;
     }
@@ -30,7 +30,6 @@ public class GlobalExceptionHandler {
      * @return
      */
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    @ResponseBody
     public OutputResult<Void> MyExceptionHandle(MethodArgumentNotValidException exception){
         exception.printStackTrace();
         BindingResult result = exception.getBindingResult();
