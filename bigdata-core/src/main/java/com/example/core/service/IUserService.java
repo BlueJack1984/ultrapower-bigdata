@@ -24,11 +24,16 @@ public interface IUserService extends IBaseService<Long, User> {
      * @param user
      * @return
      */
-    User add(User user);
+    User add(User user, List<String> businessCardUrlList, List<String> businessLicenseUrlList);
     /**
      *
      * @return
      */
     List<User> getListAll();
+    /**
+     *
+     * @return
+     */
+    User modify(User user);
 
 }

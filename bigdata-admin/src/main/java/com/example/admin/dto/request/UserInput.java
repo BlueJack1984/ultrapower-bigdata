@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 解决方案输入
@@ -41,11 +42,11 @@ public class UserInput implements Serializable {
      */
     private String email;
     /**
-     * 邮箱
+     * 个人名片
      */
-    private String url;
+    private List<String> businessCardUrlList;
     /**
-     * 邮箱
+     * 营业执照
      */
-    private String surl;
+    private List<String> businessLicenseUrlList;
 }

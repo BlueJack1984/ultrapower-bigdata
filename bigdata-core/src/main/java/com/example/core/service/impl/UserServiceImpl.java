@@ -28,15 +28,15 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public User getByAccount(String account) {
 
         User user = userDao.selectByAccount(account);
         return user;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
-    public User add(User user) {
+    public User add(User user, List<String> businessCardUrlList, List<String> businessLicenseUrlList) {
 
         User user1 = new User();
         user1.setTargetType(0);

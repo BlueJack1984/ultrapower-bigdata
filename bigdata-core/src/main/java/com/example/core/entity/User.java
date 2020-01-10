@@ -27,6 +27,10 @@ public class User extends BaseModel {
      */
     private Long corporationId;
     /**
+     * 所属公司名称
+     */
+    private String corporationName;
+    /**
      * 所属公司职位
      */
     private String position;
