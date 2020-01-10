@@ -3,12 +3,12 @@ package com.example.admin.controller;
 import com.example.admin.dto.response.OutputResult;
 import com.example.core.entity.Category;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 企业申请信息的审核模块
@@ -22,6 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/category")
 public class CategoryController {
 
+    @ApiOperation(value = "用户登录功能实现", notes = "用户登录功能实现")
+    @ApiImplicitParams({@ApiImplicitParam(paramType = "body", dataType = "LoginInput", name = "loginInput", value = "登录输入参数", required = true)})
+    @CrossOrigin
     @GetMapping("/get/{id}")
     public OutputResult<Category> getById(@PathVariable("id") Long id) {
         Category category = null;
