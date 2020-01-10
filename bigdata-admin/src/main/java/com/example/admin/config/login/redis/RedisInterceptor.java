@@ -52,11 +52,12 @@ public class RedisInterceptor implements HandlerInterceptor {
         }
         //此处为不需要登录的接口地址放行
         String visitedUrl = request.getRequestURI();
-        if(visitedUrl.contains(AnonymousAccessUrl.LOGIN) || visitedUrl.contains(AnonymousAccessUrl.REGISTRATION)) {
-            //表示用户为登录或者注册，给予通过
-            log.info("表示用户为登录或者注册，给予通过");
-            return true;
-        }
+//        if(visitedUrl.contains(AnonymousAccessUrl.LOGIN) || visitedUrl.contains(AnonymousAccessUrl.REGISTRATION)
+//                || visitedUrl.contains(AnonymousAccessUrl.CAPTCHA)) {
+//            //表示用户为登录或者注册，给予通过
+//            log.info("表示用户为登录或者注册，给予通过");
+//            return true;
+//        }
         //接下来判断请求实体头部中是否含有用户标识
         log.info("判断请求实体头部中是否含有用户标识");
         String userId = request.getHeader(USER_ID);

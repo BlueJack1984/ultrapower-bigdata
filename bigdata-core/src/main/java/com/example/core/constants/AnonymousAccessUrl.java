@@ -15,5 +15,9 @@ public class AnonymousAccessUrl {
      * 注册接口
      */
     public static final String REGISTRATION = "/register";
+    /**
+     * 获取验证码接口
+     */
+    public static final String CAPTCHA = "/captcha";
 
 }

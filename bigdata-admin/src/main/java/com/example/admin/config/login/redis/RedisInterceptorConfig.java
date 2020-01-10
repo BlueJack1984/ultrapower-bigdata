@@ -1,7 +1,9 @@
 package com.example.admin.config.login.redis;
 
+import com.example.core.constants.AnonymousAccessUrl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -18,7 +20,13 @@ public class RedisInterceptorConfig implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new RedisInterceptor()).excludePathPatterns("/**");
+        InterceptorRegistration registration = registry.addInterceptor(new RedisInterceptor());
+        registration.addPathPatterns("/**");
+        registration.excludePathPatterns(
+                AnonymousAccessUrl.LOGIN,
+                AnonymousAccessUrl.REGISTRATION,
+                AnonymousAccessUrl.CAPTCHA);
+        //registration.excludePathPatterns("/**");
     }
 
     /**

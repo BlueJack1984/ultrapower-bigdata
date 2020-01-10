@@ -22,7 +22,8 @@ public final class RedisKeyUtil {
      */
     public String generateCaptchaKey() {
 
-        String tradeNumber = sequenceService.generateTradeNumber();
+        //String tradeNumber = sequenceService.generateTradeNumber();
+        String tradeNumber = "001";
         String captchaKey = "captcha:" + tradeNumber;
         return captchaKey;
     }
