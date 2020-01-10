@@ -1,6 +1,7 @@
 package com.example.admin.security;
 
 import com.example.admin.dto.request.LoginInput;
+import com.example.admin.dto.request.RegisterInput;
 import com.example.admin.dto.response.LoginResult;
 import com.example.admin.dto.response.OutputResult;
 import com.example.core.entity.User;
@@ -80,7 +81,8 @@ public class SecurityController {
      * 用户数据验证登录结果,返回注册成功结果
      */
     @PostMapping("/register")
-    public OutputResult<String> register(@RequestBody User user) {
+    public OutputResult<String> register(@RequestBody @Valid RegisterInput registerInput) {
+
         return null;
     }
 }
