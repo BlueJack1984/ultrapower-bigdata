@@ -46,7 +46,7 @@ public class UserController {
     @ApiOperation(value = "用户登录功能实现", notes = "用户登录功能实现")
     @ApiImplicitParams({@ApiImplicitParam(paramType = "body", dataType = "LoginInput", name = "loginInput", value = "登录输入参数", required = true)})
     @CrossOrigin
-    @GetMapping("/get/{id}")
+    @GetMapping("/get/{id}/page")
     public OutputListResult<User> getByConditionPage() {
 
         PageInfo<User> pageInfo = null;
