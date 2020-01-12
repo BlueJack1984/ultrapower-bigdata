@@ -68,4 +68,66 @@ public class FileUploadController {
     public OutputResult<Void> uploadImage(@RequestParam("dir") MultipartFile[] dir) {
         return new OutputResult<>();
     }
+
+
+    /**
+     * 文件上传接口
+     *@author zhanghanqiu
+     */
+    @Api(value = "file", description = "上传文件到oss的相关接口类")
+    @RestController
+    @RequestMapping(value = "rest/cms/file")
+    @RequiredArgsConstructor
+    public class FileUploadController {
+        private final IFileUploadService fileUploadServer;
+
+        /**
+         * @author zhanghanqiu
+         * @throws ApplicationException 上传异常
+         */
+        @RequestMapping(value ="image/up",method = RequestMethod.POST )
+        @ApiOperation(value = "上传并审核图片", notes = "图片上传至oss")
+        @ApiImplicitParams({
+                @ApiImplicitParam(paramType = "query", dataType = "HttpServletRequest", name = "request", value = "请求头包含图片信息", required = true),
+                @ApiImplicitParam(paramType = "query", dataType = "String", name = "path", value = "上传oss的文件夹", required = true),
+                @ApiImplicitParam(paramType = "query", dataType = "int", name = "targetType", value = "实体类型", required = true),
+                @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "type", value = "实体子类型")
+        })
+        @CrossOrigin
+        public OutputResult<ResourcePO> upImage(MultipartHttpServletRequest imgRequest,
+                                                @RequestParam(value = "type",required = false,defaultValue = "")Integer type,
+                                                @RequestParam("targetType") int targetType,
+                                                @RequestParam("path") String path,
+                                                @RequestParam(value = "checkSize", defaultValue = "true", required = false) boolean checkSize) throws ApplicationException {
+            //创建一个通用的多部分解析器
+            ResourcePO resource = fileUploadServer.uploadImage(imgRequest, path, type, targetType, checkSize);
+
+            return  new OutputResult<>(resource);
+        }
+
+        /**
+         * @author lushusheng 2018-10-09
+         * 上传文件,包含word，pdf两种文件格式
+         * @param fileRequest 对应不同格式文件的请求
+         * @param path 文件的存储路径
+         * @param checkSize 是否校验文件的大小
+         * @return 文件资源对象
+         * @throws ApplicationException 上传文件产生的异常
+         */
+        @RequestMapping(value ="word_pdf/up",method = RequestMethod.POST)
+        @ApiOperation(value = "上传word或者pdf文件", notes = "文件上传至oss")
+        @ApiImplicitParams({
+                @ApiImplicitParam(paramType = "query", dataType = "HttpServletRequest", name = "fileRequest", value = "请求头包含文件信息", required = true),
+                @ApiImplicitParam(paramType = "query", dataType = "String", name = "path", value = "上传oss的文件夹", required = true),
+                @ApiImplicitParam(paramType = "query", dataType = "boolean", name = "checkSize", value = "判断是否检查文件大小")
+        })
+        @CrossOrigin
+        public OutputResult<ResourcePO> uploadWordAndPDF(MultipartHttpServletRequest fileRequest,
+                                                         @RequestParam("path") String path,
+                                                         @RequestParam(value = "checkSize", defaultValue = "true", required = false) boolean checkSize) throws ApplicationException {
+            //创建一个通用的多部分解析器
+            ResourcePO resource = fileUploadServer.uploadWordAndPDF(fileRequest, path, checkSize);
+            return  new OutputResult<>(resource);
+        }
+    }
 }
