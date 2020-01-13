@@ -27,4 +27,11 @@ public interface IUserDao extends IBaseDao<Long, User> {
      * @return 查询到的用户实体
      */
     List<User> selectListAll();
+
+    /**
+    * 根据用户账号查询用户信息
+    * @param account 用户账号
+    * @return 查询到的用户实体
+    */
+    List<User> selectListByConditionPage();
 }

@@ -32,6 +32,13 @@
     where status = 0
   </select>
 
+  <select id="selectListByConditionPage" resultType="com.example.core.entity.User">
+    select <include refid="c_user" />
+    from <include refid="t_user"/> _user
+    where status = 0
+  </select>
+
+
   <insert id="insert" parameterType="com.example.core.entity.User" useGeneratedKeys="true" keyProperty="id">
     insert into <include refid="t_user"/>
     (id, target_type, corporation_id, `position`, account, password, real_name,
@@ -42,8 +49,8 @@
     #{country}, #{city}, #{province}, #{address}, #{status}, #{createTime}, #{updateTime})
   </insert>
 
-  <update id="updateByPrimaryKey" parameterType="com.diich.core.model.Information" >
-    update information
+  <update id="updateById" parameterType="com.example.core.entity.User" >
+    update <include refid="t_user"/>
     set type = #{type,jdbcType=INTEGER},
       status = #{status,jdbcType=INTEGER},
       read_amount = #{readAmount,jdbcType=INTEGER},

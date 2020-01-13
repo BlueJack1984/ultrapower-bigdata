@@ -3,6 +3,8 @@ package com.example.core.service.impl;
 import com.example.core.dao.IUserDao;
 import com.example.core.entity.User;
 import com.example.core.service.IUserService;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -83,6 +85,13 @@ public class UserServiceImpl implements IUserService {
     @Override
     public PageInfo<User> getListByConditionPage(Map<String, Object> conditionMap) {
 
+        Integer offset = (Integer) conditionMap.get("offset");
+        Integer pageSize = (Integer) conditionMap.get("pageSize");
+        //分页操作
+        Page<User> page = PageHelper.startPage(offset, pageSize);
+        List<User> userList = userDao.selectListByConditionPage();
+        PageInfo<User> pageInfo = new PageInfo<User>(userList);
+        return pageInfo;
 
 //        Integer offSet = (Integer) condition.get("offSet");
 //        Integer pageSize = (Integer)condition.get("pageSize");
@@ -92,7 +101,6 @@ public class UserServiceImpl implements IUserService {
 //        List<Information> list = null;
 //        list = informationMapper.selectListByCondition(condition, rowBounds);
 //        return list;
-        return null;
     }
 
     /****************************************************************************************
