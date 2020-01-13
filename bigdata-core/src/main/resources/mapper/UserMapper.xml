@@ -17,18 +17,21 @@
   <select id="selectById" parameterType="java.lang.Long" resultType="com.example.core.entity.User">
     select <include refid="c_user" />
     from <include refid="t_user"/> _user
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT} and status = 0
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultType="com.example.core.entity.User">
-    select <include refid="c_user" />
-    from <include refid="t_user"/> _user
-    where id = #{id,jdbcType=BIGINT}
-  </select>
+
   <select id="selectByAccount" parameterType="java.lang.String" resultType="com.example.core.entity.User">
     select <include refid="c_user" />
     from <include refid="t_user"/> _user
-    where account = #{account,jdbcType=VARCHAR}
+    where account = #{account,jdbcType=VARCHAR} and status = 0
   </select>
+
+  <select id="selectListAll" resultType="com.example.core.entity.User">
+    select <include refid="c_user" />
+    from <include refid="t_user"/> _user
+    where status = 0
+  </select>
+
   <insert id="insert" parameterType="com.example.core.entity.User" useGeneratedKeys="true" keyProperty="id">
     insert into <include refid="t_user"/>
     (id, target_type, corporation_id, `position`, account, password, real_name,

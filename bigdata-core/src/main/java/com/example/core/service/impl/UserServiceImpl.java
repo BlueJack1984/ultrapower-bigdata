@@ -66,7 +66,8 @@ public class UserServiceImpl implements IUserService {
     @Override
     public List<User> getListAll() {
 
-        return null;
+        List<User> userList = userDao.selectListAll();
+        return userList;
     }
 
     /**
