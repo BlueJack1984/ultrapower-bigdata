@@ -106,7 +106,12 @@ public class UserServiceImpl implements IUserService {
     @Override
     public void modifyById(User entity) {
 
-
+        Long id = entity.getId();
+        if(null == id) {
+            log.error("");
+            return;
+        }
+        userDao.updateById(entity);
     }
 
     @Override
@@ -119,8 +124,8 @@ public class UserServiceImpl implements IUserService {
         //更新user实体，判断是否有空值
 
         //更新user实体到数据库中
-
-        return null;
+        modifyById(user);
+        return getByAccount(account);
     }
 
 
