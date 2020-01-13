@@ -30,4 +30,9 @@ public class NewsServiceImpl implements INewsService {
     public News getById(Long id) {
         return null;
     }
+
+    @Override
+    public void modifyById(News entity) {
+
+    }
 }

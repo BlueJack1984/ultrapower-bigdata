@@ -1,6 +1,7 @@
 package com.example.core.service.impl;
 
 import com.example.core.dao.IUserDao;
+import com.example.core.entity.Corporation;
 import com.example.core.entity.News;
 import com.example.core.entity.User;
 import com.example.core.service.ICorporationService;
@@ -20,12 +21,17 @@ public class CorporationServiceImpl implements ICorporationService {
 
 
     @Override
-    public PageInfo<News> getPage(Integer pageNumber, Integer pageSize) {
+    public PageInfo<Corporation> getPage(Integer pageNumber, Integer pageSize) {
         return null;
     }
 
     @Override
-    public News getById(Long id) {
+    public Corporation getById(Long id) {
         return null;
+    }
+
+    @Override
+    public void modifyById(Corporation entity) {
+
     }
 }

@@ -1,6 +1,7 @@
 package com.example.core.service.impl;
 
 import com.example.core.dao.IUserDao;
+import com.example.core.entity.Dictionary;
 import com.example.core.entity.News;
 import com.example.core.entity.User;
 import com.example.core.service.IDictionaryService;
@@ -20,12 +21,17 @@ public class DictionaryServiceImpl implements IDictionaryService {
 
 
     @Override
-    public PageInfo<News> getPage(Integer pageNumber, Integer pageSize) {
+    public PageInfo<Dictionary> getPage(Integer pageNumber, Integer pageSize) {
         return null;
     }
 
     @Override
-    public News getById(Long id) {
+    public Dictionary getById(Long id) {
         return null;
+    }
+
+    @Override
+    public void modifyById(Dictionary entity) {
+
     }
 }

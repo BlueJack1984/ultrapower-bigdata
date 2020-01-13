@@ -1,6 +1,7 @@
 package com.example.core.service.impl;
 
 import com.example.core.dao.IUserDao;
+import com.example.core.entity.ApplicationCase;
 import com.example.core.entity.News;
 import com.example.core.entity.User;
 import com.example.core.service.IApplicationCaseService;
@@ -20,12 +21,17 @@ public class ApplicationCaseServiceImpl implements IApplicationCaseService {
 
 
     @Override
-    public PageInfo<News> getPage(Integer pageNumber, Integer pageSize) {
+    public PageInfo<ApplicationCase> getPage(Integer pageNumber, Integer pageSize) {
         return null;
     }
 
     @Override
-    public News getById(Long id) {
+    public ApplicationCase getById(Long id) {
         return null;
+    }
+
+    @Override
+    public void modifyById(ApplicationCase entity) {
+
     }
 }

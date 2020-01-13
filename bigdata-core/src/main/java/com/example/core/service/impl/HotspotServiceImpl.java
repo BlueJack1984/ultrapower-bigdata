@@ -21,12 +21,17 @@ public class HotspotServiceImpl implements IHotspotService {
 
 
     @Override
-    public PageInfo<News> getPage(Integer pageNumber, Integer pageSize) {
+    public PageInfo<Hotspot> getPage(Integer pageNumber, Integer pageSize) {
         return null;
     }
 
     @Override
     public Hotspot getById(Long id) {
         return null;
+    }
+
+    @Override
+    public void modifyById(Hotspot entity) {
+
     }
 }

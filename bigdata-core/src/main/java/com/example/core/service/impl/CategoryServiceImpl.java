@@ -1,6 +1,8 @@
 package com.example.core.service.impl;
 
+import com.example.core.dao.ICategoryDao;
 import com.example.core.dao.IUserDao;
+import com.example.core.entity.Category;
 import com.example.core.entity.News;
 import com.example.core.entity.User;
 import com.example.core.service.ICategoryService;
@@ -16,17 +18,22 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements ICategoryService {
 
-    private final IUserDao userDao;
+    private final ICategoryDao categoryDao;
 
 
 
     @Override
-    public PageInfo<News> getPage(Integer pageNumber, Integer pageSize) {
+    public PageInfo<Category> getPage(Integer pageNumber, Integer pageSize) {
         return null;
     }
 
     @Override
-    public News getById(Long id) {
+    public Category getById(Long id) {
         return null;
+    }
+
+    @Override
+    public void modifyById(Category entity) {
+
     }
 }
