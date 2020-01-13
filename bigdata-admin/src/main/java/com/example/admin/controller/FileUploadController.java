@@ -28,7 +28,6 @@ public class FileUploadController {
 
     private final FileUtil fileUtil;
     /**
-     *
      * @param dir
      * @return
      */
@@ -82,7 +81,7 @@ public class FileUploadController {
         private final IFileUploadService fileUploadServer;
 
         /**
-         * @author zhanghanqiu
+         * @author daniel
          * @throws ApplicationException 上传异常
          */
         @RequestMapping(value ="image/up",method = RequestMethod.POST )

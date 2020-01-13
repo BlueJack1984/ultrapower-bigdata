@@ -1,16 +1,26 @@
 package com.example.core.service.impl;
 
-public class FileUploadServiceImpl {
-}
+
+import com.example.core.service.IFileUploadService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 文件上传的业务逻辑具体实现
- * @author wujr 2018-09-05
+ * @author daniel 2020-01-12
  */
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class FileUploadServiceImpl implements IFileUploadService {
+
     private static final String FILE_IMAGE = "imagefile";
     private static final String IMAGE_FLAG = "image";
     private static final String SPLIT_SIZE = "-";
@@ -25,6 +35,8 @@ public class FileUploadServiceImpl implements IFileUploadService {
 
     /**
      * 对需要校验的图片的尺寸进行定义
+     * @author daniel
+     * @date 2019-01-13
      */
     @Value("#{${image.upload.size:{\"5-0\":\"224-138\",\"5-1\":\"649-320\"}}}")
     private Map<String, String> mapImageSize;
@@ -141,7 +153,7 @@ public class FileUploadServiceImpl implements IFileUploadService {
     }
 
     /**
-     * @author lushusheng 2018-10-09
+     * @author daniel 2020-01-12
      * 上传文件到oss,包含word，pdf两种文件格式
      * @param fileRequest 对应不同格式文件的请求
      * @param path 文件的存储路径

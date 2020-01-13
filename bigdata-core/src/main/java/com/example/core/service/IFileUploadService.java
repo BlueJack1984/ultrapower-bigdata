@@ -1,10 +1,10 @@
 package com.example.core.service;
 
-public class IFileUploadService {
-}
+import com.example.core.exception.ApplicationException;
+
 /**
  * 文件上传服务接口定义
- * @author wujr 2018-09-05
+ * @author daniel 2020-01-11
  */
 public interface IFileUploadService {
     /**
