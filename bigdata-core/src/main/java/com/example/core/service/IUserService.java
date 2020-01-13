@@ -2,8 +2,10 @@ package com.example.core.service;
 
 import com.example.core.entity.User;
 import com.example.core.service.base.IBaseService;
+import com.github.pagehelper.PageInfo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 用户模块相关服务
@@ -18,6 +20,17 @@ public interface IUserService extends IBaseService<Long, User> {
      * @return
      */
     User getByAccount(String account);
+    /**
+     *
+     * @return
+     */
+    List<User> getListAll();
+    /**
+     *
+     * @param conditionMap
+     * @return
+     */
+    PageInfo<User> getListByConditionPage(Map<String, Object> conditionMap);
 
     /**
      *
@@ -27,13 +40,9 @@ public interface IUserService extends IBaseService<Long, User> {
     User add(User user, List<String> businessCardUrlList, List<String> businessLicenseUrlList);
     /**
      *
+     * @param modifyMap
      * @return
      */
-    List<User> getListAll();
-    /**
-     *
-     * @return
-     */
-    User modify(User user);
+    User modifyInformation(Map<String, Object> modifyMap);
 
 }

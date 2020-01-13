@@ -38,4 +38,55 @@
     #{identityNumber}, #{nickName}, #{headImageUrl}, #{phone}, #{email}, #{gender},
     #{country}, #{city}, #{province}, #{address}, #{status}, #{createTime}, #{updateTime})
   </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.diich.core.model.Information" >
+    update information
+    set type = #{type,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      read_amount = #{readAmount,jdbcType=INTEGER},
+      category_id = #{categoryId,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user_id = #{createUserId,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user_id = #{updateUserId,jdbcType=BIGINT},
+      uri = #{uri,jdbcType=VARCHAR},
+      lang = #{lang,jdbcType=CHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.diich.core.model.Information" >
+    update information
+    <set >
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="readAmount != null" >
+        read_amount = #{readAmount,jdbcType=INTEGER},
+      </if>
+      <if test="categoryId != null" >
+        category_id = #{categoryId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=BIGINT},
+      </if>
+      <if test="uri != null" >
+        uri = #{uri,jdbcType=VARCHAR},
+      </if>
+      <if test="lang != null" >
+        lang = #{lang,jdbcType=CHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
 </mapper>

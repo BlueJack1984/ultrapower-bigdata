@@ -17,12 +17,12 @@ public interface IFileUploadService {
      * @return 图片资源对象
      * @throws ApplicationException 上传图片异常
      */
-    ResourcePO uploadImage(MultipartHttpServletRequest imageRequest, String path,
-                           Integer type, int targetType,
-                           boolean checkSize) throws ApplicationException;
+//    ResourcePO uploadImage(MultipartHttpServletRequest imageRequest, String path,
+//                           Integer type, int targetType,
+//                           boolean checkSize) throws ApplicationException;
 
     /**
-     * @author lushusheng
+     * @author daniel
      * 上传文件,包含word，pdf两种文件格式
      * @param fileRequest 对应不同格式文件的请求
      * @param path 文件的存储路径
@@ -30,7 +30,7 @@ public interface IFileUploadService {
      * @return 文件资源对象
      * @throws ApplicationException 上传文件产生的异常
      */
-    ResourcePO uploadWordAndPDF(MultipartHttpServletRequest fileRequest, String path,
-                                boolean checkSize) throws ApplicationException;
+//    ResourcePO uploadWordAndPDF(MultipartHttpServletRequest fileRequest, String path,
+//                                boolean checkSize) throws ApplicationException;
 
 }

@@ -4,7 +4,9 @@ import com.example.admin.dto.request.UserInput;
 import com.example.admin.dto.response.OutputListResult;
 import com.example.admin.dto.response.OutputResult;
 import com.example.core.entity.User;
+import com.example.core.exception.ApplicationException;
 import com.example.core.service.IUserService;
+import com.example.core.utils.DESUtil;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -12,11 +14,13 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,107 +39,74 @@ public class UserController {
 
     private final IUserService userService;
 
+    private final DESUtil desUtil;
+
+    /**
+     * 根据用户id获取单个用户信息
+     * @param id 用户id
+     * @return user信息
+     */
     @ApiOperation(value="获取用户",notes="根据id获取用户")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType="path", name = "id", value = "用户id", required = true, dataType = "Integer")
-    })
+    @ApiImplicitParams({ @ApiImplicitParam(paramType="path", name = "id", value = "用户id", required = true, dataType = "Long")})
     @GetMapping("/get/{id}")
-    public User getById(@PathVariable("id") Long id) {
+    @CrossOrigin
+    public OutputResult<User> getById(@PathVariable("id") Long id) {
         User user = userService.getById(id);
-        return user;
+        return new OutputResult<>(user);
     }
 
-    @ApiOperation(value = "用户登录功能实现", notes = "用户登录功能实现")
-    @ApiImplicitParams({@ApiImplicitParam(paramType = "body", dataType = "LoginInput", name = "loginInput", value = "登录输入参数", required = true)})
+    /**
+     * 根据用户id获取单个用户信息
+     * @param searchDateStart 查询用户的创建时间起始点
+     * @param searchDateEnd 查询用户的创建时间结束点
+     * @param keywords 输入的用户账号参数
+     * @param offSet 查询的页码
+     * @param pageSize 每页显示的数据条数
+     * @return user列表信息
+     */
+    @ApiOperation(value = "查询用户列表", notes = "多条件查询用户列表信息")
+    @ApiImplicitParams({
+        @ApiImplicitParam(paramType = "body", dataType = "String", name = "searchDateStart", value = "查询用户的创建时间起始点", required = false),
+        @ApiImplicitParam(paramType = "body", dataType = "String", name = "searchDateEnd", value = "查询用户的创建时间结束点", required = false),
+        @ApiImplicitParam(paramType = "body", dataType = "String", name = "keywords", value = "输入的用户账号", required = false),
+        @ApiImplicitParam(paramType = "body", dataType = "Integer", name = "offSet", value = "查询的页码", required = false),
+        @ApiImplicitParam(paramType = "body", dataType = "Integer", name = "pageSize", value = "每页显示的数据条数", required = false)
+    })
     @CrossOrigin
-    @GetMapping("/get/{id}/page")
-    public OutputListResult<User> getByConditionPage() {
+    @GetMapping("/get/list/condition/page")
+    public OutputListResult<User> getListByConditionPage(
+            @RequestParam(value = "searchDateStart", required = false)String searchDateStart,
+            @RequestParam(value = "searchDateEnd", required = false)String searchDateEnd,
+            @RequestParam(value = "keywords", required = false)String keywords,
+            @RequestParam(value = "offSet",required = false, defaultValue = "1") Integer offSet,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "10") String pageSize) {
 
-        PageInfo<User> pageInfo = null;
+        Map<String, Object> conditionMap = new HashMap<>();
+        conditionMap.put("searchDateStart", searchDateStart);
+        conditionMap.put("searchDateEnd", searchDateEnd);
+        conditionMap.put("keywords", keywords);
+        conditionMap.put("offSet", offSet);
+        conditionMap.put("pageSize", pageSize);
+        PageInfo<User> pageInfo = userService.getListByConditionPage(conditionMap);
         return new OutputListResult<>(pageInfo);
     }
 
-    @RequestMapping(value = "/searchInformationList", method = RequestMethod.POST)
-    public OutputListResult<User> searchInformationList (
-            //@RequestParam(value = "targetType", defaultValue = "-1") Integer targetType,
-            @RequestParam("uid") Long uid,
-            @RequestParam("type") Integer type,
-            @RequestParam(value = "keywords", required = false) String keywords,
-            @RequestParam(value = "dateType", required = false)Integer dateType,
-            @RequestParam(value = "searchDateStart", required = false) String searchDateStart,
-            @RequestParam(value = "searchDateEnd", required = false) String searchDateEnd,
-            @RequestParam(value = "sourceCode", required = false) String sourceCode,
-            @RequestParam(value = "operatorId", required = false)Long operatorId,
-            //需要定义列表排序的类型，以及排序方式升序和降序
-            @RequestParam(value = "orderParameter", required = false)Integer orderParameter,
-            @RequestParam(value = "orderType", required = false)Integer orderType,
-            //资讯页需要的参数
-            @RequestParam(value = "categoryId",required = false) Long categoryId,
-            @RequestParam(value = "status", required = false, defaultValue = "-1")Integer status,
-            //活动页自己需要的参数,没有
-            @RequestParam(value = "offSet",required = false, defaultValue = "1") Integer offSet,
-            @RequestParam(value = "pageSize", required = false, defaultValue = "10") String pageSize) throws Exception {
-        Map<String, Object> map = new HashMap<>();
-        map.put("uid", uid);
-        map.put("type", type);
-        map.put("keywords", keywords);
-        map.put("dateType", dateType);
-        map.put("searchDateStart", searchDateStart);
-        map.put("searchDateEnd", searchDateEnd);
-        map.put("sourceCode", sourceCode);
-        map.put("operatorId", operatorId);
-        map.put("orderParameter", orderParameter);
-        map.put("orderType", orderType);
-        map.put("categoryId", categoryId);
-        map.put("status", status);
-        map.put("offSet", offSet);
-        map.put("pageSize", pageSize);
-        //调用service服务
-        //List<User> list = userService.selectInformationList(map);
-        List<User> list = null;
-        return new OutputListResult(list);
-    }
-
     /**
-     * @author lushusheng
-     * @param targetType 表示实体的类别
-     * @param id 当前实体的id
-     * @param reason 审核的理由说明
-     * @param operation 需要对当前实体进行的操作
-     *     operation:"submit" 表示提交审核操作
-     *     operation:"unapprove" 表示审核不通过操作
-     *     operation:"withdraw" 表示撤回操作
-     *     operation:"approve" 表示审核通过操作
-     *     operation:"publish" 表示发布操作
-     *     operation:"approve&publish" 表示通过审核并发布操作
-     * @param currentId 当前用户的id
-     * @return 是否保存成功
-     * @throws ApplicationException 保存异常
+     * 添加单个用户信息
+     * @param userInput 添加用户的输入信息
+     * targetType 用户类型：企业用户，数据审核员，管理员
+     * account 账号
+     * realName 真实姓名
+     * corporationName 公司名称
+     * position 公司职位
+     * email 邮箱
+     * businessCardUrlList 个人名片
+     * businessLicenseUrlList 营业执照
+     * @return 添加后的user信息，用于回显
      */
-    @ApiOperation(value = "对实体的各审核状态进行更改操作", notes = "根据targetType和实体的id对其审核状态进行更改操作")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "targetType", value = "实体类别", required = true),
-            @ApiImplicitParam(paramType = "query", dataType = "Long", name = "id", value = "实体的id", required = true),
-            @ApiImplicitParam(paramType = "query", dataType = "String", name = "reason", value = "审核原因", required = false),
-            @ApiImplicitParam(paramType = "query", dataType = "String", name = "operation", value = "审核操作", required = true),
-            @ApiImplicitParam(paramType = "query", dataType = "Long", name = "currentId", value = "用户id", required = true)
-    })
-    @RequestMapping(value = "audit", method = RequestMethod.GET)
+    @ApiOperation(value = "添加单个用户信息", notes = "添加单个用户信息")
+    @ApiImplicitParams({ @ApiImplicitParam(paramType = "body", dataType = "UserInput", name = "userInput", value = "添加用户的信息实体", required = true)})
     @CrossOrigin
-    public OutputResult<Void> audit(
-            @RequestParam(value = "targetType")Integer targetType,
-            @RequestParam(value = "id")Long id,
-            @RequestParam(value = "reason", required = false)String reason,
-            @RequestParam(value = "operation")String operation,
-            @RequestHeader("_current_id") Long currentId)throws ApplicationException {
-        auditServer.audit(targetType, id, currentId, operation, reason);
-        return new OutputResult<>();
-    }
-
-    /**
-     *
-     * @return
-     */
     @PostMapping("/add")
     public OutputResult<User> add(@RequestBody @Valid UserInput userInput) {
 
@@ -153,35 +124,161 @@ public class UserController {
         return new OutputResult<>(storedUser);
     }
 
+    /**
+     * 修改单个用户信息
+     * @param userInput 修改用户的输入信息
+     * targetType 用户类型：企业用户，数据审核员，管理员
+     * account 账号
+     * realName 真实姓名
+     * corporationName 公司名称
+     * position 公司职位
+     * email 邮箱
+     * businessCardUrlList 个人名片
+     * businessLicenseUrlList 营业执照
+     * @return 返回修改后的user信息，用于回显
+     */
+    @ApiOperation(value = "修改用户信息", notes = "修改用户信息")
+    @ApiImplicitParams({@ApiImplicitParam(paramType = "body", dataType = "UserInput", name = "userInput", value = "修改的用户信息", required = true)})
+    @CrossOrigin
     @PostMapping("/information/modify")
-    public OutputResult<User> modifyInformation(@RequestBody @Valid UserInput userInput) {
+    public OutputResult<User> modifyInformation(@RequestBody UserInput userInput) {
 
+        //判断账号参数
+        String account = userInput.getAccount();
+        if(StringUtils.isEmpty(account)) {
+            log.error("");
+            return new OutputResult<>(null);
+        }
+        //根据账号查询用户
+        Map<String, Object> modifyMap = new HashMap<>();
+        modifyMap.put("targetType", userInput.getTargetType());
+        modifyMap.put("account", userInput.getAccount());
+        modifyMap.put("realName", userInput.getRealName());
+        modifyMap.put("corporationName", userInput.getCorporationName());
+        modifyMap.put("position", userInput.getPosition());
+        modifyMap.put("email", userInput.getEmail());
+        modifyMap.put("businessCardUrlList", userInput.getBusinessCardUrlList());
+        modifyMap.put("businessLicenseUrlList", userInput.getBusinessLicenseUrlList());
 
-        return null;
-    }
-
-    @PostMapping("/password/modify")
-    public OutputResult<User> modifyPassword(@RequestBody @Valid UserInput userInput) {
-
-
-        return null;
-    }
-
-    @GetMapping("/password/reset")
-    public OutputResult<User> resetPassword(@RequestBody @Valid UserInput userInput) {
-
-        return null;
+        User user = userService.modifyInformation(modifyMap);
+        return new OutputResult<>(user);
     }
 
     /**
-     * 锁定用户，删除用户等功能
-     * 更改数据库的status字段值实现
-     * @return
+     * 修改用户密码信息
+     * @param userId 用户id
+     * @param originalPassword 用户原始密码
+     * @param newPassword 新密码
+     * @param confirmPassword 确认密码
+     * @return 返回修改成功消息
      */
+    @ApiOperation(value = "修改用户密码信息", notes = "修改用户密码信息")
+    @ApiImplicitParams({
+        @ApiImplicitParam(paramType = "header", dataType = "Long", name = "userId", value = "用户id", required = true),
+        @ApiImplicitParam(paramType = "body", dataType = "String", name = "originalPassword", value = "用户原始密码", required = true),
+        @ApiImplicitParam(paramType = "body", dataType = "String", name = "newPassword", value = "新密码", required = true),
+        @ApiImplicitParam(paramType = "body", dataType = "String", name = "confirmPassword", value = "确认密码", required = true)
+    })
+    @CrossOrigin
+    @PostMapping("/password/modify")
+    public OutputResult<Void> modifyPassword(
+            @RequestHeader(value = "userId",required = true) Long userId,
+            @RequestParam(value = "originalPassword",required = true) String originalPassword,
+            @RequestParam(value = "newPassword",required = true) String newPassword,
+            @RequestParam(value = "confirmPassword",required = true) String confirmPassword) {
+
+        //判断数据是否为空
+        if(StringUtils.isEmpty(originalPassword) || StringUtils.isEmpty(newPassword) || StringUtils.isEmpty(confirmPassword)) {
+            log.error("");
+            return new OutputResult<>();
+        }
+        //查询当前用户信息
+        User user = userService.getById(userId);
+        if(null == user) {
+            log.error(null);
+            return new OutputResult<>();
+        }
+        //判断原始密码是否相同
+        String encryptedPassword = desUtil.getEncryptString(originalPassword);
+        String storedPassword = user.getPassword();
+        if(! encryptedPassword.equals(storedPassword)) {
+            log.error("");
+            return new OutputResult<>();
+        }
+        //判断新密码与确认密码是否相同
+        if(! newPassword.equals(confirmPassword)) {
+            log.error("");
+            return new OutputResult<>();
+        }
+        String encryptedNewPassword = desUtil.getEncryptString(newPassword);
+        //存入数据库中
+        //userService.modifyInformation()
+        user.setPassword(encryptedNewPassword);
+        user.setUpdateTime(new Date());
+        userService.modifyById(user);
+        return new OutputResult<>();
+    }
+
+    /**
+     * 重置用户密码信息
+     * @param userId 用户id
+     * @return 返回修改成功消息
+     */
+    @ApiOperation(value = "重置用户密码信息", notes = "重置用户密码信息")
+    @ApiImplicitParams({@ApiImplicitParam(paramType = "url", dataType = "Long", name = "userId", value = "用户id", required = true)})
+    @CrossOrigin
+    @GetMapping("/password/reset/{userId}")
+    public OutputResult<User> resetPassword(@PathVariable(value = "userId",required = true) Long userId) {
+
+        //查询用户信息
+        User user = userService.getById(userId);
+        if(null == user) {
+            log.error("");
+            return new OutputResult<>();
+        }
+        //设置默认密码
+        String defaultPassword = "";
+        String encryptedDefaultPassword = desUtil.getEncryptString(defaultPassword);
+        user.setPassword(encryptedDefaultPassword);
+        user.setUpdateTime(new Date());
+        //将用户信息更新到数据库
+        //userService.
+        userService.modifyById(user);
+        return new OutputResult<>();
+    }
+
+
+    /**
+     * 修改用户状态信息，包括锁定，删除等功能
+     * 更改数据库的status字段值实现
+     * @param level 用户状态值
+     * @param level 用户状态值
+     * @return 返回修改成功消息
+     */
+    @ApiOperation(value = "修改用户状态信息", notes = "修改用户状态信息，包括锁定，删除等功能")
+    @ApiImplicitParams({@ApiImplicitParam(paramType = "url", dataType = "Integer", name = "level", value = "用户状态值", required = true)})
+    @CrossOrigin
     @GetMapping("/status/modify")
-    public OutputResult<User> modifyStatus() {
+    public OutputResult<User> modifyStatus(
+            @RequestParam(value = "userId",required = true) Long userId,
+            @RequestParam(value = "status",required = true) Integer status) {
 
-
-        return null;
+        //判断参数值
+        if(null == userId || null == status || status > 6 || status < 0) {
+            log.error("");
+            return new OutputResult<>();
+        }
+        //调用服务
+        User user = userService.getById(userId);
+        if(null == user) {
+            log.error("");
+            return new OutputResult<>();
+        }
+        //更新数据库
+        user.setStatus(status);
+        user.setUpdateTime(new Date());
+        //userService.
+        userService.modifyById(user);
+        return new OutputResult<>();
     }
 }

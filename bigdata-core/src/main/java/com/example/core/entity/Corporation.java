@@ -85,4 +85,8 @@ public class Corporation extends BaseModel {
      * 公司介绍
      */
     private String introduction;
+    /**
+     * 营业执照url地址
+     */
+    private String businessLicenseUrl;
 }

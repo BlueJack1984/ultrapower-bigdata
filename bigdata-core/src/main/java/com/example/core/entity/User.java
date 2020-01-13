@@ -86,4 +86,9 @@ public class User extends BaseModel {
      * 地址
      */
     private String address;
+    /**
+     * 个人名片url地址
+     */
+    private String businessCardUrl;
+
 }
