@@ -2,6 +2,7 @@ package com.example.core.service.impl;
 
 
 import com.example.core.exception.ApplicationException;
+import com.example.core.service.IFileStorageService;
 import com.example.core.service.IFileUploadService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,8 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 public class FileUploadServiceImpl implements IFileUploadService {
+
+    private final IFileStorageService ossFileStorageService;
 
     private static final String FILE_IMAGE = "imagefile";
     private static final String IMAGE_FLAG = "image";
@@ -248,6 +251,18 @@ public class FileUploadServiceImpl implements IFileUploadService {
      */
     private void checkFileSensitive()throws ApplicationException {
         // 对word和pdf类型文档内容的敏感信息进行审核
+    }
+
+    @Override
+    public String uploadImage(InputStream imageInputStream, Integer targetType, Long imageSize, String url) throws ApplicationException {
+
+        String uploadUrl = ossFileStorageService.storage(imageInputStream, imageSize, url);
+        return uploadUrl;
+    }
+
+    @Override
+    public String uploadDocument(InputStream documentInputStream, String path,  Integer targetType, boolean checkSize) throws ApplicationException {
+        return null;
     }
 }
 

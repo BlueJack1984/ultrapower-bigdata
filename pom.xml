@@ -33,6 +33,7 @@
         <redis-lettuce-pool-version>2.8.0</redis-lettuce-pool-version>
         <commons-io-version>2.6</commons-io-version>
         <commons-fileupload-version>1.4</commons-fileupload-version>
+        <aliyun-sdk-oss-version>3.8.1</aliyun-sdk-oss-version>
     </properties>
 
     <!-- 模块说明：这里声明多个子模块 -->
@@ -138,6 +139,12 @@
                 <groupId>commons-fileupload</groupId>
                 <artifactId>commons-fileupload</artifactId>
                 <version>${commons-fileupload-version}</version>
+            </dependency>
+            <!-- 图片上传 SDK 阿里云oss -->
+            <dependency>
+                <groupId>com.aliyun.oss</groupId>
+                <artifactId>aliyun-sdk-oss</artifactId>
+                <version>${aliyun-sdk-oss-version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

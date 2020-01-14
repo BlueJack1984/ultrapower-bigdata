@@ -37,10 +37,20 @@ public class FileUploadController {
     private final FileUtil fileUtil;
     private final IFileUploadService fileUploadService;
 
-    @Value("${file.image.name}")
-    private final String FILE_IMAGE_NAME;
-    @Value("${file.document.name}")
-    private final String FILE_DOCUMENT_NAME;
+    private static final String FILE_IMAGE = "imagefile";
+    private static final String IMAGE_FLAG = "image";
+    private static final String SPLIT_SIZE = "-";
+    private static final String SPLIT_PATH = "/";
+
+    private static final String FILE_NAME = "fileName";
+    private static final String WORD_FLAG = "word";
+    private static final String PDF_FLAG = "pdf";
+    private static final Integer RESOURCE_TYPE_DOCUMENT = 3;
+
+    //@Value("${file.image.name}")
+    private final String FILE_IMAGE_NAME = null;
+    //@Value("${file.document.name}")
+    private final String FILE_DOCUMENT_NAME = null;
 
     /**
      * 上传图片模块
@@ -117,34 +127,27 @@ public class FileUploadController {
 
     /**
      * 上传图片模块
-     * @param imageFile 请求头包含图片信息
-     * @param path 上传oss的文件夹
+     * @param sourceImg 请求头包含图片信息
+     * @param checkFlag 上传oss的文件夹
      * @throws ApplicationException 上传异常
      */
-    private Boolean check(MultipartFile imageFile, Boolean checkFlag) {
+    private Boolean check(BufferedImage sourceImg, Boolean checkFlag) {
 
-        BufferedImage sourceImg = null;
-        try {
-            sourceImg = ImageIO.read(imageFile.getInputStream());
-        } catch (IOException e) {
-            l
-            e.printStackTrace();
-        }
-        if (checkFlag) {
-            int width = sourceImg.getWidth();
-            int height = sourceImg.getHeight();
-            String key = String.valueOf(targetType) + (type == null ? "" : ("-" + String.valueOf(type)));
-            if (mapTargetCheckImageSize.containsKey(key)) {
-                // 有该参数，进行校验
-                List<Integer> sizes = mapTargetCheckImageSize.get(key);
-                int w = sizes.get(0);
-                int h = sizes.get(1);
-                if (width != w && height != h) {
-                    throw new WrongOperationException("请确定尺寸，图片尺寸应为" + w + "*" + h);
-                }
-            }
-        }
-        return false;
+//        if (checkFlag) {
+//            int width = sourceImg.getWidth();
+//            int height = sourceImg.getHeight();
+//            String key = String.valueOf(targetType) + (type == null ? "" : ("-" + String.valueOf(type)));
+//            if (mapTargetCheckImageSize.containsKey(key)) {
+//                // 有该参数，进行校验
+//                List<Integer> sizes = mapTargetCheckImageSize.get(key);
+//                int w = sizes.get(0);
+//                int h = sizes.get(1);
+//                if (width != w && height != h) {
+//                    throw new WrongOperationException("请确定尺寸，图片尺寸应为" + w + "*" + h);
+//                }
+//            }
+//        }
+        return true;
     }
 
     /**
@@ -170,8 +173,15 @@ public class FileUploadController {
                  @RequestParam(value = "targetType", required = true) Integer targetType,
                  @RequestParam(value = "checkFlag", required = false, defaultValue = "true") Boolean checkFlag) throws ApplicationException {
 
+        MultipartFile documentFile = documentRequest.getFile("");
+        InputStream documentInputStream = null;
+        try {
+            documentInputStream = documentFile.getInputStream();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         //创建一个通用的多部分解析器
-        String url = fileUploadService.uploadDocument(documentRequest, path, targetType, checkFlag);
+        String url = fileUploadService.uploadDocument(documentInputStream, path, targetType, checkFlag);
         return  new OutputResult<>(url);
     }
     /**
@@ -180,6 +190,8 @@ public class FileUploadController {
      */
     @PostMapping("/documents")
     public OutputResult<Void> uploadDocument(@RequestParam("dir") MultipartFile[] dir) {
+
+
         System.out.println("上传文件夹...");
         File file;
         String fileName="";
@@ -206,7 +218,6 @@ public class FileUploadController {
     }
 
     /**
-     *
      * @param dir
      * @return
      */

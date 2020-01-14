@@ -33,7 +33,8 @@ public interface IFileUploadService {
      * @return 文件资源对象
      * @throws ApplicationException 上传文件产生的异常
      */
-//    ResourcePO uploadWordAndPDF(MultipartHttpServletRequest fileRequest, String path,
-//                                boolean checkSize) throws ApplicationException;
+    String uploadDocument(InputStream documentInputStream, String path,
+                          Integer targetType,
+                                boolean checkSize) throws ApplicationException;
 
 }
