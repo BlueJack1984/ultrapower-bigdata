@@ -19,27 +19,12 @@ import java.util.Date;
 public final class TradeManageUtil {
 
     private final IProductService productService;
-    /**
-     * 日期格式转换
-     */
-    private final SimpleDateFormat SDF = new SimpleDateFormat("yyyyMMddHHmmss");
+
 
     /**
      * 生成交易流水号
      *
      * @return
      */
-//    public String getOtaTradeNo() {
-//        Long nextVal = assetManageBusiDao.getOtaTradeNo();
-//        String tempId = Long.toString(nextVal);
-//        if (tempId.length() > 6) {
-//            tempId = tempId.substring(tempId.length() - 6, tempId.length());
-//        } else {
-//            tempId = StringUtil.paddingHeadZero(tempId, 6);
-//        }
-//
-//        String sysTimeStr = DateUtils.format(new Date(), "yyyyMMddHHmmss");
-//        String tradeId = sysTimeStr + tempId;
-//        return tradeId;
-//    }
+
 }
