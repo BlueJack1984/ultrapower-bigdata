@@ -34,4 +34,9 @@ public class HotspotServiceImpl implements IHotspotService {
     public void modifyById(Hotspot entity) {
 
     }
+
+    @Override
+    public void add(Hotspot entity) {
+
+    }
 }

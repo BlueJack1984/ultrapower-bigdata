@@ -23,4 +23,11 @@ public interface IBaseService<K, V> {
      * @return 无返回
      */
     void modifyById(V entity);
+
+    /**
+     * 新增实体信息
+     * @param entity 实体信息，可能包括id
+     * @return 无返回
+     */
+     void add(V entity);
 }

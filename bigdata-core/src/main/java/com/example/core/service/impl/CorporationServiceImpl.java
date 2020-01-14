@@ -34,4 +34,9 @@ public class CorporationServiceImpl implements ICorporationService {
     public void modifyById(Corporation entity) {
 
     }
+
+    @Override
+    public void add(Corporation entity) {
+
+    }
 }

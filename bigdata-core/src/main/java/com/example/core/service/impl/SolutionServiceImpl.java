@@ -34,4 +34,9 @@ public class SolutionServiceImpl implements ISolutionService {
     public void modifyById(Solution entity) {
 
     }
+
+    @Override
+    public void add(Solution entity) {
+
+    }
 }

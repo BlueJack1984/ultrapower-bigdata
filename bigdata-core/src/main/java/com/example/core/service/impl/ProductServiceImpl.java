@@ -34,4 +34,9 @@ public class ProductServiceImpl implements IProductService {
     public void modifyById(Product entity) {
 
     }
+
+    @Override
+    public void add(Product entity) {
+
+    }
 }

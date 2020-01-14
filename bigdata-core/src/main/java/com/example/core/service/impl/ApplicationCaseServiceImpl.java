@@ -34,4 +34,9 @@ public class ApplicationCaseServiceImpl implements IApplicationCaseService {
     public void modifyById(ApplicationCase entity) {
 
     }
+
+    @Override
+    public void add(ApplicationCase entity) {
+
+    }
 }

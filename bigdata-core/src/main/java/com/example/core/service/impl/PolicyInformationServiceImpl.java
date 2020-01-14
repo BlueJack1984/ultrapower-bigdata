@@ -32,4 +32,9 @@ public class PolicyInformationServiceImpl implements IPolicyInformationService {
     public void modifyById(PolicyInformation entity) {
 
     }
+
+    @Override
+    public void add(PolicyInformation entity) {
+
+    }
 }

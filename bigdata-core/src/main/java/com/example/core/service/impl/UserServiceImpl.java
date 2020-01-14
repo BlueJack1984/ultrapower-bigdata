@@ -124,6 +124,11 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    public void add(User entity) {
+
+    }
+
+    @Override
     public User modifyInformation(Map<String, Object> modifyMap) {
 
         //根据account账号查询

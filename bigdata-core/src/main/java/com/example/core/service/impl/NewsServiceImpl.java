@@ -35,4 +35,9 @@ public class NewsServiceImpl implements INewsService {
     public void modifyById(News entity) {
 
     }
+
+    @Override
+    public void add(News entity) {
+
+    }
 }

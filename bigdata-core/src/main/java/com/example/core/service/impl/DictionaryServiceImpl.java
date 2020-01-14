@@ -34,4 +34,9 @@ public class DictionaryServiceImpl implements IDictionaryService {
     public void modifyById(Dictionary entity) {
 
     }
+
+    @Override
+    public void add(Dictionary entity) {
+
+    }
 }

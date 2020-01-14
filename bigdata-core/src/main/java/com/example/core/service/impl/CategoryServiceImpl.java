@@ -36,4 +36,9 @@ public class CategoryServiceImpl implements ICategoryService {
     public void modifyById(Category entity) {
 
     }
+
+    @Override
+    public void add(Category entity) {
+
+    }
 }
