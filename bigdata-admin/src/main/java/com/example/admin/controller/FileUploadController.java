@@ -29,7 +29,7 @@ import java.util.List;
  * @author daniel
  * @date 2019-12-30
  */
-@Api(value = "file", description = "上传文件到oss的相关接口类")
+@Api(value = "file", tags = {"上传文件到oss的相关接口类"})
 @RestController
 @Slf4j
 @RequiredArgsConstructor

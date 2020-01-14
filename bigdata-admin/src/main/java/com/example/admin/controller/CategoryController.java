@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
  * @author daniel
  * @date 2019-12-30
  */
-@Api(value="swagger测试", description="TestController")
+@Api(value="swagger测试", tags= {"TestController"})
 @RestController
 @Slf4j
 @RequiredArgsConstructor
