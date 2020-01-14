@@ -21,6 +21,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 文件上传接口
@@ -98,15 +100,15 @@ public class FileUploadController {
             .append(SPLIT_PATH).append(path)
             .append(SPLIT_PATH).append(System.currentTimeMillis())
             .append(imageName.trim());
-        BufferedImage sourceImg = null;
+        BufferedImage sourceImage = null;
         try {
-            sourceImg = ImageIO.read(imageFile.getInputStream());
+            sourceImage = ImageIO.read(imageFile.getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
             log.error("");
             return new OutputResult<>();
         }
-        Boolean checkResult = check(sourceImg, checkFlag);
+        Boolean checkResult = checkSize(sourceImage, checkFlag);
         if(false == checkResult) {
             log.error("");
             return new OutputResult<>();
@@ -127,24 +129,29 @@ public class FileUploadController {
 
     /**
      * 上传图片模块
-     * @param sourceImg 请求头包含图片信息
-     * @param checkFlag 上传oss的文件夹
+     * @param sourceImage 图片信息
+     * @param checkFlag 是否需要检查尺寸标志
      * @throws ApplicationException 上传异常
      */
-    private Boolean check(BufferedImage sourceImg, Boolean checkFlag) {
+    private Boolean checkSize(BufferedImage sourceImage, Boolean checkFlag) {
 
-//        if (checkFlag) {
-//            int width = sourceImg.getWidth();
-//            int height = sourceImg.getHeight();
-//            String key = String.valueOf(targetType) + (type == null ? "" : ("-" + String.valueOf(type)));
-//            if (mapTargetCheckImageSize.containsKey(key)) {
-//                // 有该参数，进行校验
-//                List<Integer> sizes = mapTargetCheckImageSize.get(key);
-//                int w = sizes.get(0);
-//                int h = sizes.get(1);
-//                if (width != w && height != h) {
-//                    throw new WrongOperationException("请确定尺寸，图片尺寸应为" + w + "*" + h);
-//                }
+        //判断是否需要检查尺寸
+        if(false == checkFlag) {
+            log.info("不需要检查尺寸！");
+            return true;
+        }
+        //需要检查尺寸
+        int width = sourceImage.getWidth();
+        int height = sourceImage.getHeight();
+//        String key = String.valueOf(targetType) + (type == null ? "" : ("-" + String.valueOf(type)));
+//        if (mapTargetCheckImageSize.containsKey(key)) {
+//            // 有该参数，进行校验
+//            List<Integer> sizes = mapTargetCheckImageSize.get(key);
+//            int w = sizes.get(0);
+//            int h = sizes.get(1);
+//            if (width != w && height != h) {
+//
+//                //throw new WrongOperationException("请确定尺寸，图片尺寸应为" + w + "*" + h);
 //            }
 //        }
         return true;
@@ -180,23 +187,61 @@ public class FileUploadController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        //        //判断上传文件是否存在
+//        MultipartFile file = fileRequest.getFile(FILE_NAME);
+//        if(file == null) {
+//            throw new ApplicationException(ApplicationException.PARAM_ERROR, "没有上传附件文件");
+//        }
+//        //根据传递参数判断文件类型
+//        String contentType = file.getContentType();
+//        String fileName = file.getOriginalFilename();
+//        if(StringUtils.isEmpty(fileName)) {
+//            throw new ApplicationException(1, "上传文件名为空，请设置上传文件名称");
+//        }
+//        StringBuilder url = new StringBuilder();
+//        //判断上传文件是否为正确的类型，通过请求头的contentType判断
+//        if(contentType == null || ! (contentType.contains(WORD_FLAG) || contentType.contains(PDF_FLAG) ||
+//                (contentType.contains("octet-stream") && ".docx".equals(fileName.substring(fileName.indexOf(".")))))) {
+//            throw new ApplicationException(ApplicationException.PARAM_ERROR, "附件请求contentType参数错误,只能是word或pdf文档");
+//        }
+//        if(contentType.contains(WORD_FLAG) || contentType.contains("octet-stream")) {
+//            url.append(WORD_FLAG);
+//        }else {
+//            url.append(PDF_FLAG);
+//        }
+//        url.append(SPLIT_PATH).append(path).append(SPLIT_PATH).append(System.currentTimeMillis()).append(fileName.trim());
+//        //检验文件大小
+//        if(checkSize) {
+//            checkFileSize(file);
+//        }
+//        InputStream inputStream = null;
+//        try {
+//            inputStream = file.getInputStream();
+//        } catch (IOException e) {
+//            log.error("oss上传文件异常：{}", e.getMessage());
+//            throw new AlibabaOssException("上传文件异常");
+//        }
+//        String fileUrl = fileStorageServer.storage(inputStream, file.getSize(), url.toString());
         //创建一个通用的多部分解析器
         String url = fileUploadService.uploadDocument(documentInputStream, path, targetType, checkFlag);
         return  new OutputResult<>(url);
     }
     /**
-     * @param dir
+     * @param documents
      * @return
      */
     @PostMapping("/documents")
-    public OutputResult<Void> uploadDocument(@RequestParam("dir") MultipartFile[] dir) {
+    public OutputResult<Void> uploadDocument(@RequestParam("documents") MultipartFile[] documents) {
 
+        for(MultipartFile documentFile : documents) {
 
+        }
         System.out.println("上传文件夹...");
         File file;
         String fileName="";
         String filePath="";
-        for (MultipartFile f : dir) {
+        for (MultipartFile f : documents) {
             fileName=f.getOriginalFilename();
             String type=f.getContentType();
             System.out.println("\n"+fileName+" ,"+type);
@@ -218,11 +263,16 @@ public class FileUploadController {
     }
 
     /**
-     * @param dir
+     * @param images
      * @return
      */
     @PostMapping("/images")
-    public OutputResult<Void> uploadImage(@RequestParam("dir") MultipartFile[] dir) {
-        return new OutputResult<>();
+    public OutputResult<List<String>> uploadImage(@RequestParam("images") MultipartFile[] images) {
+
+        List<String> imageUrlList = new ArrayList<>();
+        for(MultipartFile imageFile : images) {
+            //
+        }
+        return new OutputResult<>(imageUrlList);
     }
 }
