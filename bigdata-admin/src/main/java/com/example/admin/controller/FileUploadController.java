@@ -180,41 +180,49 @@ public class FileUploadController {
                  @RequestParam(value = "targetType", required = true) Integer targetType,
                  @RequestParam(value = "checkFlag", required = false, defaultValue = "true") Boolean checkFlag) throws ApplicationException {
 
-        MultipartFile documentFile = documentRequest.getFile("");
+        //判断上传文件是否存在
+        MultipartFile documentFile = documentRequest.getFile(FILE_NAME);
+        if(null == documentFile) {
+            log.error("");
+            return new OutputResult<>();
+            //throw new ApplicationException(ApplicationException.PARAM_ERROR, "没有上传附件文件");
+        }
+        //根据传递参数判断文件类型
+        String contentType = documentFile.getContentType();
+        String fileName = documentFile.getOriginalFilename();
+        if(StringUtils.isEmpty(fileName)) {
+            log.error("");
+            return new OutputResult<>();
+            //throw new ApplicationException(1, "上传文件名为空，请设置上传文件名称");
+        }
+        StringBuilder url = new StringBuilder();
+        //判断上传文件是否为正确的类型，通过请求头的contentType判断
+        if(contentType == null || ! (contentType.contains(WORD_FLAG) || contentType.contains(PDF_FLAG) ||
+                (contentType.contains("octet-stream") && ".docx".equals(fileName.substring(fileName.indexOf(".")))))) {
+            log.error("");
+            return new OutputResult<>();
+            //throw new ApplicationException(ApplicationException.PARAM_ERROR, "附件请求contentType参数错误,只能是word或pdf文档");
+        }
+        if(contentType.contains(WORD_FLAG) || contentType.contains("octet-stream")) {
+            url.append(WORD_FLAG);
+        }else {
+            url.append(PDF_FLAG);
+        }
+        url.append(SPLIT_PATH).append(path).append(SPLIT_PATH).append(System.currentTimeMillis()).append(fileName.trim());
+        //检验文件大小
+        if(checkFlag) {
+            //checkFileSize(file);
+        }
         InputStream documentInputStream = null;
         try {
             documentInputStream = documentFile.getInputStream();
         } catch (IOException e) {
             e.printStackTrace();
+            log.error("oss上传文件异常：{}", e.getMessage());
+            return new OutputResult<>();
+            //throw new AlibabaOssException("上传文件异常");
         }
 
-        //        //判断上传文件是否存在
-//        MultipartFile file = fileRequest.getFile(FILE_NAME);
-//        if(file == null) {
-//            throw new ApplicationException(ApplicationException.PARAM_ERROR, "没有上传附件文件");
-//        }
-//        //根据传递参数判断文件类型
-//        String contentType = file.getContentType();
-//        String fileName = file.getOriginalFilename();
-//        if(StringUtils.isEmpty(fileName)) {
-//            throw new ApplicationException(1, "上传文件名为空，请设置上传文件名称");
-//        }
-//        StringBuilder url = new StringBuilder();
-//        //判断上传文件是否为正确的类型，通过请求头的contentType判断
-//        if(contentType == null || ! (contentType.contains(WORD_FLAG) || contentType.contains(PDF_FLAG) ||
-//                (contentType.contains("octet-stream") && ".docx".equals(fileName.substring(fileName.indexOf(".")))))) {
-//            throw new ApplicationException(ApplicationException.PARAM_ERROR, "附件请求contentType参数错误,只能是word或pdf文档");
-//        }
-//        if(contentType.contains(WORD_FLAG) || contentType.contains("octet-stream")) {
-//            url.append(WORD_FLAG);
-//        }else {
-//            url.append(PDF_FLAG);
-//        }
-//        url.append(SPLIT_PATH).append(path).append(SPLIT_PATH).append(System.currentTimeMillis()).append(fileName.trim());
-//        //检验文件大小
-//        if(checkSize) {
-//            checkFileSize(file);
-//        }
 //        InputStream inputStream = null;
 //        try {
 //            inputStream = file.getInputStream();
@@ -224,8 +232,24 @@ public class FileUploadController {
 //        }
 //        String fileUrl = fileStorageServer.storage(inputStream, file.getSize(), url.toString());
         //创建一个通用的多部分解析器
-        String url = fileUploadService.uploadDocument(documentInputStream, path, targetType, checkFlag);
-        return  new OutputResult<>(url);
+        String documentUrl = fileUploadService.uploadDocument(documentInputStream, targetType, documentFile.getSize(), url.toString());
+        return  new OutputResult<>(documentUrl);
+    }
+
+        /**
+     * @author lushusheng 2018-10-09
+     * 上传文件到oss,包含word，pdf两种文件格式
+     * @param documentFile 需要检查大小的文件
+     * @return 无
+     * @throws ApplicationException 上传文件产生的异常
+     */
+    private Boolean checkFileSize(MultipartFile documentFile)throws ApplicationException {
+        //获取文件的字节大小，单位byte
+        long size = documentFile.getSize();
+//        if(size > FILE_MAX_SIZE) {
+//            throw new ApplicationException(1, "上传文件大小超出最大限制，请重新上传文件");
+//        }
+        return true;
     }
     /**
      * @param documents

@@ -225,20 +225,8 @@ public class FileUploadServiceImpl implements IFileUploadService {
 //        return resource;
 //    }
 //
-//    /**
-//     * @author lushusheng 2018-10-09
-//     * 上传文件到oss,包含word，pdf两种文件格式
-//     * @param file 需要检查大小的文件
-//     * @return 无
-//     * @throws ApplicationException 上传文件产生的异常
-//     */
-//    private void checkFileSize(MultipartFile file)throws ApplicationException {
-//        //获取文件的字节大小，单位byte
-//        long size = file.getSize();
-//        if(size > FILE_MAX_SIZE) {
-//            throw new ApplicationException(1, "上传文件大小超出最大限制，请重新上传文件");
-//        }
-//    }
+
+
     /**
      * TODO
      * @author lushusheng 2018-10-09
@@ -261,8 +249,9 @@ public class FileUploadServiceImpl implements IFileUploadService {
     }
 
     @Override
-    public String uploadDocument(InputStream documentInputStream, String path,  Integer targetType, boolean checkSize) throws ApplicationException {
-        return null;
+    public String uploadDocument(InputStream documentInputStream, Integer targetType, Long documentSize, String url) throws ApplicationException {
+        String uploadUrl = ossFileStorageService.storage(documentInputStream, documentSize, url);
+        return uploadUrl;
     }
 }
 
