@@ -32,7 +32,8 @@ public class CorporationServiceImpl implements ICorporationService {
 
     @Override
     public void modifyById(Corporation entity) {
-
+        int i = 10;
+        System.out.println(i);
     }
 
     @Override

@@ -38,5 +38,7 @@ public class DictionaryServiceImpl implements IDictionaryService {
     @Override
     public void add(Dictionary entity) {
 
+        int i = 10;
+        System.out.println("heloo word");
     }
 }
