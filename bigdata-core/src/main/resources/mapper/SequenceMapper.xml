@@ -1,32 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.core.dao.ISequenceDao">
-  <sql id="c_sequence">
-    <!--最基础属性-->
-    _sequence.name, _application_case.status,
-    _application_case.create_time createTime, _application_case.update_time updateTime,
-    <!--通用属性-->
-    _application_case.logic_type logicType, _application_case.corporation_id corporationId,
-    _application_case.introduction, _application_case.name, _application_case.version,
-    _application_case.abbreviation, _application_case.logo_url logoUrl,
-    _application_case.primary_category_id primaryCategoryId, _application_case.based_frameworks basedFrameworks,
-    _application_case.core_functionality coreFunctionality,
-    _application_case.detailed_description detailedDescription, _application_case.district,
-    _application_case.safety_issue safetyIssue, _application_case.performance,
-    _application_case.application_field_ids applicationFieldIds,
-    <!--特有属性-->
-    _application_case.product_ids productIds, _application_case.solution_ids solutionIds,
-    _application_case.partner, _application_case.publish_date publishDate,
-    _application_case.architecture_image_url architectureImageUrl, _application_case.significance
-  </sql>
-  <sql id="t_sequence">
-    sequence
-  </sql>
-  <select id="selectById" parameterType="java.lang.Long" resultType="com.example.core.entity.ApplicationCase">
-    select <include refid="c_application_case" />
-    from <include refid="t_application_case"/> _application_case
-    where id = #{id,jdbcType=BIGINT}
-  </select>
+    <sql id="c_sequence">
+        <!--最基础属性-->
+        _sequence.name, _sequence.status, _sequence.logic_type logicType,
+        _sequence.create_time createTime, _sequence.update_time updateTime
+    </sql>
+    <sql id="t_sequence">
+        sequence
+    </sql>
+    <select id="selectById" parameterType="java.lang.Long" resultType="com.example.core.entity.ApplicationCase">
+        select <include refid="c_sequence" />
+        from <include refid="t_sequence"/> _sequence
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+<!--    <select id="inserta">-->
+<!--    </select>-->
 <!--  <insert id="insert" parameterType="user" >-->
 <!--    insert into <include refid="t_user"/>-->
 <!--    (id, account, password, super_password, real_name, identity_number, nick_name, head_image, phone,-->
