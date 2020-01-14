@@ -9,10 +9,8 @@
     <sql id="t_sequence">
         sequence
     </sql>
-    <select id="selectById" parameterType="java.lang.Long" resultType="com.example.core.entity.ApplicationCase">
-        select <include refid="c_sequence" />
-        from <include refid="t_sequence"/> _sequence
-        where id = #{id,jdbcType=BIGINT}
+    <select id="generateTradeNumber" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select currval(#{sequenceName})
     </select>
 <!--    <select id="inserta">-->
 <!--    </select>-->

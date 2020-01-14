@@ -31,6 +31,7 @@ public class RedisInterceptorConfig implements WebMvcConfigurer {
 //                AnonymousAccessUrl.CAPTCHA);
         List<String> excludePathList = new ArrayList<>();
         excludePathList.add("/captcha/**");
+        excludePathList.add("/sequence/**");
         registration.excludePathPatterns(excludePathList);
         //registration.excludePathPatterns("/**");
     }

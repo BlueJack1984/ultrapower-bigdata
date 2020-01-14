@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 public class SequenceServiceImpl implements ISequenceService {
 
     private final ISequenceDao sequenceDao;
+    private static final String SEQUENCE_NAME = "warrior";
 
     /**
      * 使用mysql产生序列号，作为redis中唯一key部分参数
@@ -19,7 +20,8 @@ public class SequenceServiceImpl implements ISequenceService {
      */
     @Override
     public String generateTradeNumber() {
-        sequenceDao.selectById(null);
-        return null;
+        //String sequenceName = "warrior";
+        Integer sequenceNumber = sequenceDao.generateTradeNumber(SEQUENCE_NAME);
+        return sequenceNumber.toString();
     }
 }
