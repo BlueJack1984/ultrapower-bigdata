@@ -6,8 +6,15 @@ package com.example.core.constants;
  * @date 2019-12-23
  */
 public enum ResponseCode {
-    SUCCESS(200, ""), ERROR(201, ""),
-    ILLEGAL(202, "");
+    SUCCESS(200, ""),
+    ERROR(201, ""),
+    ILLEGAL(202, ""),
+
+    USER_NOT_EXIST_ERROR(201, "用户不存在"),
+    USER_PASSWORD_ERROR(202, "用户密码错误"),
+    USER_INFO_STORE_ERROR(203, "")
+
+    ;
     private Integer code;
 
     private String message;

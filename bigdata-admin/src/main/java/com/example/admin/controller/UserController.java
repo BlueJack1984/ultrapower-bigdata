@@ -199,7 +199,7 @@ public class UserController {
             return new OutputResult<>();
         }
         //判断原始密码是否相同
-        String encryptedPassword = desUtil.getEncryptString(originalPassword);
+        String encryptedPassword = desUtil.encrypt(originalPassword);
         String storedPassword = user.getPassword();
         if(! encryptedPassword.equals(storedPassword)) {
             log.error("");
@@ -210,7 +210,7 @@ public class UserController {
             log.error("");
             return new OutputResult<>();
         }
-        String encryptedNewPassword = desUtil.getEncryptString(newPassword);
+        String encryptedNewPassword = desUtil.encrypt(newPassword);
         //存入数据库中
         //userService.modifyInformation()
         user.setPassword(encryptedNewPassword);
@@ -238,7 +238,7 @@ public class UserController {
         }
         //设置默认密码
         String defaultPassword = "";
-        String encryptedDefaultPassword = desUtil.getEncryptString(defaultPassword);
+        String encryptedDefaultPassword = desUtil.encrypt(defaultPassword);
         user.setPassword(encryptedDefaultPassword);
         user.setUpdateTime(new Date());
         //将用户信息更新到数据库

@@ -18,29 +18,32 @@ public final class RedisKeyUtil {
     private final ISequenceService sequenceService;
 
     /**
+     *
      * @return
      */
     public String generateCaptchaKey() {
 
-        //String tradeNumber = sequenceService.generateTradeNumber();
-        String tradeNumber = "001";
+        String tradeNumber = sequenceService.generateTradeNumber();
+        //String tradeNumber = "001";
         String captchaKey = "captcha:" + tradeNumber;
         return captchaKey;
     }
 
     /**
-     *
-     * @return
+     * 产生登录信息在redis中的存储key，使用用户id作为key
+     * @param userId 用户id参数
+     * @return 返回获取到的登录信息存储在redis中的字符串key
      */
     public String generateLoginKey(Long userId) {
 
-        /**
-         * login:userId:数值
-         */
+        //判断userId是否为空
         if(null == userId) {
-            //log.error(null, null);
+            log.error("【user：登录接口中-产生redis的key错误，传入的userId为空】");
             return null;
         }
-        return userId.toString();
+        //这里需要进行产生交易流水号来区分多个用户
+        //格式为userId：tradeNumber
+        String tradeNumber = sequenceService.generateTradeNumber();
+        return userId.toString() + ":" + tradeNumber;
     }
 }

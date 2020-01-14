@@ -4,6 +4,7 @@ import com.example.admin.dto.request.LoginInput;
 import com.example.admin.dto.request.RegisterInput;
 import com.example.admin.dto.response.LoginResult;
 import com.example.admin.dto.response.OutputResult;
+import com.example.core.constants.ResponseCode;
 import com.example.core.entity.User;
 import com.example.core.service.IUserService;
 import com.example.core.utils.DESUtil;
@@ -47,25 +48,30 @@ public class SecurityController {
         String account = loginInput.getAccount();
         User user = userService.getByAccount(account);
         if(null == user) {
-            //log.error(null, null);
+            log.error("【user：登录接口中-用户名不存在错误】");
             //返回用户不存在的code和message
-            return new OutputResult<>(null, null);
+            return new OutputResult<>(ResponseCode.USER_NOT_EXIST_ERROR);
         }
         String password = loginInput.getPassword();
-        String encryptedPassword = desUtil.getEncryptString(password);
+        String encryptedPassword = desUtil.encrypt(password);
         if(! encryptedPassword.equals(user.getPassword())) {
-            //log.error(null, null);
+            log.error("【user：登录接口中-用户密码输入错误】");
             //返回用户密码输入错误的code和message
-            return new OutputResult<>(null, null);
+            return new OutputResult<>(ResponseCode.USER_PASSWORD_ERROR);
         }
         //用户名和密码均正确
         LoginResult loginResult = new LoginResult();
         Long userId = user.getId();
         String loginKey = redisKeyUtil.generateLoginKey(userId);
-        //存入到redis中，用户id作为key，account作为value
-        redisUtil.set(loginKey, account, 100000);
+        //存入到redis中，loginKey作为key，account作为value
+        Boolean storeResult = redisUtil.set(loginKey, account, 100000);
+        if(false == storeResult) {
+            log.error("【user：登录接口中-用户登录信息没有存入redis错误】");
+            return new OutputResult<>();
+        }
         //将相关信息组装返回
         loginResult.setUserId(userId);
+        loginResult.setLoginKey(loginKey);
         loginResult.setTargetType(user.getTargetType());
         loginResult.setAccount(account);
         return new OutputResult<>(loginResult);
@@ -129,7 +135,7 @@ public class SecurityController {
         }
         //各项信息正确
         //密码加密
-        String encryptedPassword = desUtil.getEncryptString(password);
+        String encryptedPassword = desUtil.encrypt(password);
         //将注册信息存入数据库
         User user = new User();
         user.setAccount(phoneNumber);

@@ -14,8 +14,9 @@ public class LoginResult implements Serializable {
 
     private Long userId;
 
-    private Integer targetType;
-
     private String account;
 
+    private String loginKey;
+
+    private Integer targetType;
 }
