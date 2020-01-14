@@ -5,9 +5,11 @@ import com.example.core.exception.ApplicationException;
 import com.example.core.service.IFileUploadService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +18,7 @@ import java.util.Map;
 /**
  * 文件上传的业务逻辑具体实现
  * @author daniel 2020-01-12
+ * @date 2019-01-14
  */
 @Service
 @Slf4j
@@ -247,4 +250,6 @@ public class FileUploadServiceImpl implements IFileUploadService {
         // 对word和pdf类型文档内容的敏感信息进行审核
     }
 }
+
+
 

@@ -2,6 +2,8 @@ package com.example.core.service;
 
 import com.example.core.exception.ApplicationException;
 
+import java.io.InputStream;
+
 /**
  * 文件上传服务接口定义
  * @author daniel 2020-01-11
@@ -17,9 +19,10 @@ public interface IFileUploadService {
      * @return 图片资源对象
      * @throws ApplicationException 上传图片异常
      */
-//    ResourcePO uploadImage(MultipartHttpServletRequest imageRequest, String path,
-//                           Integer type, int targetType,
-//                           boolean checkSize) throws ApplicationException;
+    String uploadImage(InputStream imageInputStream,
+                       Integer targetType,
+                       Long imageSize,
+                       String url) throws ApplicationException;
 
     /**
      * @author daniel

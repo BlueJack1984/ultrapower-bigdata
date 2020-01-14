@@ -2,6 +2,7 @@ package com.example.admin.controller;
 
 import com.example.admin.dto.response.OutputResult;
 import com.example.core.exception.ApplicationException;
+import com.example.core.service.IFileUploadService;
 import com.example.core.utils.FileUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -9,12 +10,17 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * 文件上传接口
@@ -29,61 +35,150 @@ import java.io.IOException;
 public class FileUploadController {
 
     private final FileUtil fileUtil;
-    //private final IFileUploadService fileUploadServer;
+    private final IFileUploadService fileUploadService;
+
+    @Value("${file.image.name}")
+    private final String FILE_IMAGE_NAME;
+    @Value("${file.document.name}")
+    private final String FILE_DOCUMENT_NAME;
 
     /**
-     * @author daniel
+     * 上传图片模块
+     * @param imageRequest 请求头包含图片信息
+     * @param path 上传oss的文件夹
+     * @param targetType 实体类型
+     * @param checkFlag 是否要检查上传文件尺寸
      * @throws ApplicationException 上传异常
      */
-    @PostMapping(value ="/image")
     @ApiOperation(value = "上传并审核图片", notes = "图片上传至oss")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", dataType = "HttpServletRequest", name = "request", value = "请求头包含图片信息", required = true),
-            @ApiImplicitParam(paramType = "query", dataType = "String", name = "path", value = "上传oss的文件夹", required = true),
-            @ApiImplicitParam(paramType = "query", dataType = "int", name = "targetType", value = "实体类型", required = true),
-            @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "type", value = "实体子类型")
+        @ApiImplicitParam(paramType = "query", dataType = "HttpServletRequest", name = "request", value = "请求头包含图片信息", required = true),
+        @ApiImplicitParam(paramType = "query", dataType = "String", name = "path", value = "上传oss的文件夹", required = true),
+        @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "targetType", value = "实体类型", required = true),
+        @ApiImplicitParam(paramType = "query", dataType = "Boolean", name = "checkFlag", value = "是否要检查上传文件尺寸")
     })
     @CrossOrigin
-    public OutputResult<Void> upImage(MultipartHttpServletRequest imgRequest,
-                                            @RequestParam(value = "type",required = false,defaultValue = "")Integer type,
-                                            @RequestParam("targetType") int targetType,
-                                            @RequestParam("path") String path,
-                                            @RequestParam(value = "checkSize", defaultValue = "true", required = false) boolean checkSize) throws ApplicationException {
-        //创建一个通用的多部分解析器
-        //ResourcePO resource = fileUploadServer.uploadImage(imgRequest, path, type, targetType, checkSize);
+    @PostMapping(value ="/image")
+    public OutputResult<String> uploadImage(MultipartHttpServletRequest imageRequest,
+                @RequestParam(value = "path", required = true) String path,
+                @RequestParam(value = "targetType", required = true) Integer targetType,
+                @RequestParam(value = "checkFlag", required = false, defaultValue = "true") Boolean checkFlag) throws ApplicationException {
 
-        return  new OutputResult<>();
+
+        MultipartFile imageFile = imageRequest.getFile(FILE_IMAGE_NAME);
+        if (null == imageFile){
+            log.error("");
+            return new OutputResult<>();
+            //throw new WrongOperationException("请上传图片");
+        }
+        String imageName = imageFile.getOriginalFilename();
+        if (StringUtils.isEmpty(imageName)){
+            log.error("");
+            return new OutputResult<>();
+            //throw new WrongOperationException("请设置图片的文件名称");
+        }
+        String contentType = imageFile.getContentType();
+        if (null == contentType || ! contentType.contains(IMAGE_FLAG)) {
+            log.error("");
+            return new OutputResult<>();
+            //throw new WrongOperationException("请上传图片");
+        }
+        StringBuilder url = new StringBuilder();
+        url.append(IMAGE_FLAG)
+            .append(SPLIT_PATH).append(path)
+            .append(SPLIT_PATH).append(System.currentTimeMillis())
+            .append(imageName.trim());
+        BufferedImage sourceImg = null;
+        try {
+            sourceImg = ImageIO.read(imageFile.getInputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+            log.error("");
+            return new OutputResult<>();
+        }
+        Boolean checkResult = check(sourceImg, checkFlag);
+        if(false == checkResult) {
+            log.error("");
+            return new OutputResult<>();
+        }
+        InputStream imageInputStream = null;
+        try {
+            imageInputStream = imageFile.getInputStream();
+        } catch (IOException e) {
+            e.printStackTrace();
+            log.error("");
+            return new OutputResult<>();
+        }
+
+        //创建一个通用的多部分解析器
+        String imageUrl = fileUploadService.uploadImage(imageInputStream, targetType, imageFile.getSize(), url.toString());
+        return  new OutputResult<>(imageUrl);
     }
 
     /**
-     * @author lushusheng 2018-10-09
+     * 上传图片模块
+     * @param imageFile 请求头包含图片信息
+     * @param path 上传oss的文件夹
+     * @throws ApplicationException 上传异常
+     */
+    private Boolean check(MultipartFile imageFile, Boolean checkFlag) {
+
+        BufferedImage sourceImg = null;
+        try {
+            sourceImg = ImageIO.read(imageFile.getInputStream());
+        } catch (IOException e) {
+            l
+            e.printStackTrace();
+        }
+        if (checkFlag) {
+            int width = sourceImg.getWidth();
+            int height = sourceImg.getHeight();
+            String key = String.valueOf(targetType) + (type == null ? "" : ("-" + String.valueOf(type)));
+            if (mapTargetCheckImageSize.containsKey(key)) {
+                // 有该参数，进行校验
+                List<Integer> sizes = mapTargetCheckImageSize.get(key);
+                int w = sizes.get(0);
+                int h = sizes.get(1);
+                if (width != w && height != h) {
+                    throw new WrongOperationException("请确定尺寸，图片尺寸应为" + w + "*" + h);
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
      * 上传文件,包含word，pdf两种文件格式
-     * @param fileRequest 对应不同格式文件的请求
+     * @param documentRequest 对应不同格式文件的请求
      * @param path 文件的存储路径
-     * @param checkSize 是否校验文件的大小
+     * @param targetType 实体类型
+     * @param checkFlag 是否校验文件的大小
      * @return 文件资源对象
      * @throws ApplicationException 上传文件产生的异常
      */
-    @RequestMapping(value ="word_pdf/up",method = RequestMethod.POST)
     @ApiOperation(value = "上传word或者pdf文件", notes = "文件上传至oss")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", dataType = "HttpServletRequest", name = "fileRequest", value = "请求头包含文件信息", required = true),
-            @ApiImplicitParam(paramType = "query", dataType = "String", name = "path", value = "上传oss的文件夹", required = true),
-            @ApiImplicitParam(paramType = "query", dataType = "boolean", name = "checkSize", value = "判断是否检查文件大小")
+        @ApiImplicitParam(paramType = "query", dataType = "HttpServletRequest", name = "fileRequest", value = "请求头包含文件信息", required = true),
+        @ApiImplicitParam(paramType = "query", dataType = "String", name = "path", value = "上传oss的文件夹", required = true),
+        @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "targetType", value = "实体类型", required = true),
+        @ApiImplicitParam(paramType = "query", dataType = "boolean", name = "checkFlag", value = "判断是否检查文件大小")
     })
     @CrossOrigin
-    public OutputResult<Void> uploadWordAndPDF(MultipartHttpServletRequest fileRequest,
-                                                     @RequestParam("path") String path,
-                                                     @RequestParam(value = "checkSize", defaultValue = "true", required = false) boolean checkSize) throws ApplicationException {
+    @PostMapping(value ="/document")
+    public OutputResult<String> uploadDocument(MultipartHttpServletRequest documentRequest,
+                 @RequestParam(value = "path", required = true) String path,
+                 @RequestParam(value = "targetType", required = true) Integer targetType,
+                 @RequestParam(value = "checkFlag", required = false, defaultValue = "true") Boolean checkFlag) throws ApplicationException {
+
         //创建一个通用的多部分解析器
-        //ResourcePO resource = fileUploadServer.uploadWordAndPDF(fileRequest, path, checkSize);
-        return  new OutputResult<>();
+        String url = fileUploadService.uploadDocument(documentRequest, path, targetType, checkFlag);
+        return  new OutputResult<>(url);
     }
     /**
      * @param dir
      * @return
      */
-    @PostMapping("/document")
+    @PostMapping("/documents")
     public OutputResult<Void> uploadDocument(@RequestParam("dir") MultipartFile[] dir) {
         System.out.println("上传文件夹...");
         File file;
