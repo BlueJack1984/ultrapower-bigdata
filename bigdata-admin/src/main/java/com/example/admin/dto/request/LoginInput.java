@@ -1,6 +1,8 @@
 package com.example.admin.dto.request;
 
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
+import sun.security.util.ManifestEntryVerifier;
 
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
@@ -16,5 +18,6 @@ public class LoginInput implements Serializable {
     @NotBlank(message = "")
     private String account;
     @NotBlank(message = "")
+    @Length(message = "")
     private String password;
 }
