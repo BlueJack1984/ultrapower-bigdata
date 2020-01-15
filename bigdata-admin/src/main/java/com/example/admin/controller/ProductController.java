@@ -18,7 +18,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 /**
- * 产品模块
+ * 大数据产品模块
  * @author daniel
  * @date 2019-12-30
  */
@@ -33,12 +33,12 @@ public class ProductController {
 
 
     /**
-     * 根据用户id获取单个产品信息
+     * 根据用户id获取单个大数据产品信息
      * @param id 产品id
      * @return 产品信息
      */
-    @ApiOperation(value="获取产品",notes="根据id获取单个产品信息")
-    @ApiImplicitParams({ @ApiImplicitParam(paramType="path", name = "id", value = "产品id", required = true, dataType = "Long")})
+    @ApiOperation(value="获取大数据产品",notes="根据id获取单个大数据产品信息")
+    @ApiImplicitParams({ @ApiImplicitParam(paramType="path", name = "id", value = "大数据产品id", required = true, dataType = "Long")})
     @CrossOrigin
     @GetMapping("/get/{id}")
     public OutputResult<Product> getById(@PathVariable("id") Long id) {
@@ -50,12 +50,13 @@ public class ProductController {
 
 
     /**
-     * 根据用户id获取单个产品信息
-     * @param id 产品id
-     * @return 产品信息
+     * 新增大数据产品信息接口
+     * @param productInput 新增的大数据产品信息
+     *
+     * @return 大数据产品信息
      */
-    @ApiOperation(value="获取产品",notes="根据id获取单个产品信息")
-    @ApiImplicitParams({ @ApiImplicitParam(paramType="path", name = "id", value = "产品id", required = true, dataType = "Long")})
+    @ApiOperation(value="新增产品",notes="新增大数据产品信息接口")
+    @ApiImplicitParams({ @ApiImplicitParam(paramType="path", name = "id", value = "大数据产品id", required = true, dataType = "Long")})
     @CrossOrigin
     @PostMapping("/add")
     public OutputResult<Product> add(@RequestBody @Valid ProductInput productInput) {
