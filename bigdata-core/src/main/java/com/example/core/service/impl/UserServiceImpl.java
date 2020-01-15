@@ -256,29 +256,26 @@ public class UserServiceImpl implements IUserService {
      * @return 无返回
      */
     @Override
-    public User add(User user, List<String> businessCardUrlList, List<String> businessLicenseUrlList) {
+    public User add(User user, List<String> businessCardUrlList, List<String> businessLicenseUrlList) throws ApplicationException{
 
         //判断用户是否注册
+        String account = user.getAccount();
+        User storedUser = getByAccount(account);
+        if(null != storedUser) {
+            log.error("【user：添加用户信息接口-根据输入账号搜索到已存在用户】");
+            throw new ApplicationException(ResponseCode.USER_ALREADY_EXIST_ERROR);
+        }
         //根据填写公司名称查找公司信息
-        //如果没有公司信息则创建
-
-//        User user1 = new User();
-//        user1.setTargetType(0);
-//        user1.setCorporationId(0L);
-//        user1.setPosition("CEO");
-//        user1.setAccount("durant");
-//        user1.setPassword("123456");
-//        user1.setRealName("kevin");
-//        user1.setIdentityNumber("1234567890");
-//        user1.setNickName("death god");
-//        user1.setEmail("durant@163.com");
-//        user1.setGender(0);
-//        user1.setCountry("USA");
-//        user1.setCity("new york");
-//        user1.setStatus(0);
-//        user1.setCreateTime(new Date());
-//        user1.setUpdateTime(new Date());
-        //userDao.insert(user1);
+        String corporationName = user.getCorporationName();
+        Corporation corporation = corporationService.getByName(corporationName);
+        //公司信息不存在，创建公司实体
+        if(null == corporation) {
+            corporation = corporationService.addInformation(corporationName);
+        }
+        //公司信息存在并关联
+        user.setCorporationId(corporation.getId());
+        //处理个人名片和营业执照
+        //将信息插入到数据库中
         add(user);
         return user;
     }

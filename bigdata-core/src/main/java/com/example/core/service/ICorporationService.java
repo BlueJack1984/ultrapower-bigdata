@@ -5,7 +5,28 @@ import com.example.core.entity.News;
 import com.example.core.service.base.IBaseService;
 import com.github.pagehelper.PageInfo;
 
+/**
+ * 公司业务相关模块
+ * @author daniel
+ * @date 2019-01-15
+ */
 public interface ICorporationService extends IBaseService<Long, Corporation> {
 
     PageInfo<Corporation> getPage(Integer pageNumber, Integer pageSize);
+
+    /**
+     * 根据公司名称获取公司实体，精确查询
+     * @param corporationName
+     * @return
+     */
+    Corporation getByName(String corporationName);
+
+    /**
+     *
+     * @param corporationName
+     * @return
+     */
+    //暂时不成熟，需要复用，后面考虑
+    Corporation addInformation(String corporationName);
+
 }

@@ -25,6 +25,22 @@ public class CorporationServiceImpl implements ICorporationService {
         return null;
     }
 
+    /**
+     * 根据公司名称获取公司实体，精确查询
+     * @param corporationName
+     * @return
+     */
+    @Override
+    public Corporation getByName(String corporationName) {
+        return null;
+    }
+
+    @Override
+    public Corporation addInformation(String corporationName) {
+        return null;
+    }
+
+
     @Override
     public Corporation getById(Long id) {
         return null;

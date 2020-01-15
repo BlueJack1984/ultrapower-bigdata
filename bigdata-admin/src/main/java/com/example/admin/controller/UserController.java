@@ -109,7 +109,7 @@ public class UserController {
     @ApiImplicitParams({ @ApiImplicitParam(paramType = "body", dataType = "UserInput", name = "userInput", value = "添加用户的信息实体", required = true)})
     @CrossOrigin
     @PostMapping("/add")
-    public OutputResult<User> add(@RequestBody @Valid UserInput userInput) {
+    public OutputResult<User> add(@RequestBody @Valid UserInput userInput) throws ApplicationException{
 
         User user = new User();
         user.setTargetType(userInput.getTargetType());

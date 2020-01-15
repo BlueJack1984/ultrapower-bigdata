@@ -38,7 +38,7 @@ public interface IUserService extends IBaseService<Long, User> {
      * @param user
      * @return
      */
-    User add(User user, List<String> businessCardUrlList, List<String> businessLicenseUrlList);
+    User add(User user, List<String> businessCardUrlList, List<String> businessLicenseUrlList) throws ApplicationException;
     /**
      *
      * @param modifyMap

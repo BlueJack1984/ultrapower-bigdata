@@ -110,16 +110,10 @@ public class SecurityController {
             return new OutputResult<>(ResponseCode.USER_REGISTER_PHONE_ERROR);
         }
         //手机号是否已经注册
-        List<User> userList = userService.getListAll();
-        if(null != userList && userList.size() > 0) {
-            //遍历是否有已注册手机号
-            for(User user : userList) {
-                String account = user.getAccount();
-                if(phoneNumber.equals(account)) {
-                    log.error("【user：注册接口中-输入的账号(手机号)已经被注册】");
-                    return new OutputResult<>(ResponseCode.USER_ACCOUNT_REGISTERED_ERROR);
-                }
-            }
+        User storedUser = userService.getByAccount(phoneNumber);
+        if(null != storedUser) {
+            log.error("【user：注册接口中-输入的账号(手机号)已经被注册】");
+            return new OutputResult<>(ResponseCode.USER_ACCOUNT_REGISTERED_ERROR);
         }
         //输入密码与确认密码是否一致
         String password = registerInput.getPassword();
