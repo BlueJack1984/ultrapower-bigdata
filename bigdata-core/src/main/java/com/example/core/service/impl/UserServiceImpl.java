@@ -196,24 +196,25 @@ public class UserServiceImpl implements IUserService {
     @Override
     public User add(User user, List<String> businessCardUrlList, List<String> businessLicenseUrlList) {
 
-        User user1 = new User();
-        user1.setTargetType(0);
-        user1.setCorporationId(0L);
-        user1.setPosition("CEO");
-        user1.setAccount("durant");
-        user1.setPassword("123456");
-        user1.setRealName("kevin");
-        user1.setIdentityNumber("1234567890");
-        user1.setNickName("death god");
-        user1.setEmail("durant@163.com");
-        user1.setGender(0);
-        user1.setCountry("USA");
-        user1.setCity("new york");
-        user1.setStatus(0);
-        user1.setCreateTime(new Date());
-        user1.setUpdateTime(new Date());
+
+//        User user1 = new User();
+//        user1.setTargetType(0);
+//        user1.setCorporationId(0L);
+//        user1.setPosition("CEO");
+//        user1.setAccount("durant");
+//        user1.setPassword("123456");
+//        user1.setRealName("kevin");
+//        user1.setIdentityNumber("1234567890");
+//        user1.setNickName("death god");
+//        user1.setEmail("durant@163.com");
+//        user1.setGender(0);
+//        user1.setCountry("USA");
+//        user1.setCity("new york");
+//        user1.setStatus(0);
+//        user1.setCreateTime(new Date());
+//        user1.setUpdateTime(new Date());
         //userDao.insert(user1);
-        add(user1);
-        return user1;
+        add(user);
+        return user;
     }
 }
