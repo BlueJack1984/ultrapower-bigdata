@@ -14,8 +14,10 @@ public enum ResponseCode {
     USER_PASSWORD_ERROR(202, "用户密码错误"),
     USER_INFO_STORE_ERROR(203, ""),
     USER_REGISTER_PHONE_ILLEGAL(204, "注册账号的手机号格式不合法"),
-    USER_REGISTER_PHONE_ERROR(205, "填写的注册账号信息不是手机号")
-
+    USER_REGISTER_PHONE_ERROR(205, "填写的注册账号信息不是手机号"),
+    USER_ACCOUNT_REGISTERED_ERROR(206, "该账号已经被注册"),
+    USER_PASSWORD_CONFIRM_ERROR(207, "输入密码与确认密码不一致"),
+    USER_CAPTCHA_ERROR(208, "验证码输入错误"),
     ;
     private Integer code;
 

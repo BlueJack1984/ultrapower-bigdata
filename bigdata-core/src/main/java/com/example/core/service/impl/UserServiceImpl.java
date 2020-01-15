@@ -125,7 +125,8 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public void add(User entity) {
-
+        //这里对entity实体进行处理
+        userDao.insert(entity);
     }
 
     @Override

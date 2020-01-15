@@ -116,8 +116,8 @@ public class SecurityController {
             for(User user : userList) {
                 String account = user.getAccount();
                 if(phoneNumber.equals(account)) {
-                    log.error("【user：注册接口中-输入的账号信息不是手机号】");
-                    return new OutputResult<>(201, "");
+                    log.error("【user：注册接口中-输入的账号(手机号)已经被注册】");
+                    return new OutputResult<>(ResponseCode.USER_ACCOUNT_REGISTERED_ERROR);
                 }
             }
         }
@@ -125,15 +125,15 @@ public class SecurityController {
         String password = registerInput.getPassword();
         String confirmPassword = registerInput.getConfirmPassword();
         if(! password.equals(confirmPassword)) {
-            //log.error(null, null);
-            return new OutputResult<>(202, "");
+            log.error("【user：注册接口中-输入密码与确认密码不一致】");
+            return new OutputResult<>(ResponseCode.USER_PASSWORD_CONFIRM_ERROR);
         }
         //验证码是否正确
         String captcha = registerInput.getCaptcha();
         String storedCaptcha = redisUtil.get(registerInput.getCaptchaKey(), String.class);
         if(! captcha.equals(storedCaptcha)) {
-            //log.error(null, null);
-            return new OutputResult<>(202, "");
+            log.error("【user：注册接口中-验证码输入错误】");
+            return new OutputResult<>(ResponseCode.USER_CAPTCHA_ERROR);
         }
         //各项信息正确
         //密码加密
@@ -146,7 +146,7 @@ public class SecurityController {
         user.setTargetType(0);
         user.setCreateTime(new Date());
         user.setUpdateTime(new Date());
-        //userService.add(user);
+        userService.add(user);
         //将redis中的对应键值对删除, 不删除也可以，到期自动消失
         redisUtil.delete(registerInput.getCaptchaKey());
         //返回成功结果
