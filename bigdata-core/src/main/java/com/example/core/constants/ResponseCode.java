@@ -12,7 +12,9 @@ public enum ResponseCode {
 
     USER_NOT_EXIST_ERROR(201, "用户不存在"),
     USER_PASSWORD_ERROR(202, "用户密码错误"),
-    USER_INFO_STORE_ERROR(203, "")
+    USER_INFO_STORE_ERROR(203, ""),
+    USER_REGISTER_PHONE_ILLEGAL(204, "注册账号的手机号格式不合法"),
+    USER_REGISTER_PHONE_ERROR(205, "填写的注册账号信息不是手机号")
 
     ;
     private Integer code;

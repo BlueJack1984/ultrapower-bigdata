@@ -53,7 +53,7 @@ public class SequenceServiceImpl implements ISequenceService {
         Integer sourceSize = source.length();
         Integer offset = destinationSize - sourceSize;
         if(offset < 0) {
-            log.info("");
+            log.info("实际的字符串长度大于要求的位数，不需要进行补0操作！");
             return null;
         }
         //补0

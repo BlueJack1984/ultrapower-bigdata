@@ -67,7 +67,7 @@ public class SecurityController {
         Boolean storeResult = redisUtil.set(loginKey, account, 100000);
         if(false == storeResult) {
             log.error("【user：登录接口中-用户登录信息没有存入redis错误】");
-            return new OutputResult<>();
+            return new OutputResult<>(ResponseCode.USER_INFO_STORE_ERROR);
         }
         //将相关信息组装返回
         loginResult.setUserId(userId);
@@ -81,9 +81,11 @@ public class SecurityController {
      * 账号注销
      */
     @GetMapping("/logout")
-    public OutputResult<String> logout(@RequestHeader(value = "currentUserId") Long currentUserId) {
+    public OutputResult<String> logout(@RequestHeader(value = "currentUserId") Long currentUserId,
+                                       @RequestHeader(value = "loginKey") String loginKey) {
         //删除redis中记录的登录信息键值对
-        String redisLoginKey = currentUserId.toString();
+        //String redisLoginKey = currentUserId.toString();
+        String redisLoginKey = loginKey;
         redisUtil.delete(redisLoginKey);
         return new OutputResult<>("用户成功退出：" + currentUserId);
     }
@@ -100,12 +102,12 @@ public class SecurityController {
         try {
             Boolean validationResult = phoneFormatCheckUtil.isPhoneLegal(phoneNumber);
             if(! validationResult) {
-                //log.error(null, null);
-                return new OutputResult<>(201, "");
+                log.error("【user：注册接口中-输入的手机号码格式不合法】");
+                return new OutputResult<>(ResponseCode.USER_REGISTER_PHONE_ILLEGAL);
             }
         }catch (Exception ex) {
-            //log.error(null, null);
-            return new OutputResult<>();
+            log.error("【user：注册接口中-输入的账号信息不是手机号】");
+            return new OutputResult<>(ResponseCode.USER_REGISTER_PHONE_ERROR);
         }
         //手机号是否已经注册
         List<User> userList = userService.getListAll();
@@ -114,7 +116,7 @@ public class SecurityController {
             for(User user : userList) {
                 String account = user.getAccount();
                 if(phoneNumber.equals(account)) {
-                    //log.error(null, null);
+                    log.error("【user：注册接口中-输入的账号信息不是手机号】");
                     return new OutputResult<>(201, "");
                 }
             }
