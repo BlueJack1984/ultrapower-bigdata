@@ -27,7 +27,7 @@
   <select id="selectById" parameterType="java.lang.Long" resultType="com.example.core.entity.Product">
     select <include refid="c_product" />
     from <include refid="t_product"/> _product
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT} and status = 0
   </select>
 <!--  <insert id="insert" parameterType="user" >-->
 <!--    insert into <include refid="t_user"/>-->

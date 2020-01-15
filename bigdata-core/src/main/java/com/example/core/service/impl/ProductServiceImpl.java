@@ -25,9 +25,16 @@ public class ProductServiceImpl implements IProductService {
         return null;
     }
 
+    /**
+     * 根据id获取实体信息
+     * @param id 实体id
+     * @return 返回实体信息
+     */
     @Override
     public Product getById(Long id) {
-        return null;
+
+        Product product = productDao.selectById(id);
+        return product;
     }
 
     @Override

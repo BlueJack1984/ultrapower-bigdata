@@ -7,6 +7,9 @@ import com.example.core.entity.Product;
 import com.example.core.service.IProductService;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +22,7 @@ import java.util.List;
  * @author daniel
  * @date 2019-12-30
  */
-@Api(value="swagger测试", description="TestController")
+@Api(value="大数据产品模块接口", tags= {"大数据产品模块接口"})
 @RestController
 @Slf4j
 @RequiredArgsConstructor
@@ -28,12 +31,32 @@ public class ProductController {
 
     private final IProductService productService;
 
+
+    /**
+     * 根据用户id获取单个产品信息
+     * @param id 产品id
+     * @return 产品信息
+     */
+    @ApiOperation(value="获取产品",notes="根据id获取单个产品信息")
+    @ApiImplicitParams({ @ApiImplicitParam(paramType="path", name = "id", value = "产品id", required = true, dataType = "Long")})
+    @CrossOrigin
     @GetMapping("/get/{id}")
     public OutputResult<Product> getById(@PathVariable("id") Long id) {
 
-        return null;
+        //id值不为空，否则无法请求
+        Product product = productService.getById(id);
+        return new OutputResult<>(product);
     }
 
+
+    /**
+     * 根据用户id获取单个产品信息
+     * @param id 产品id
+     * @return 产品信息
+     */
+    @ApiOperation(value="获取产品",notes="根据id获取单个产品信息")
+    @ApiImplicitParams({ @ApiImplicitParam(paramType="path", name = "id", value = "产品id", required = true, dataType = "Long")})
+    @CrossOrigin
     @PostMapping("/add")
     public OutputResult<Product> add(@RequestBody @Valid ProductInput productInput) {
 
@@ -43,8 +66,13 @@ public class ProductController {
     }
 
     /**
-     * 获取列表
+     * 根据用户id获取单个产品信息
+     * @param id 产品id
+     * @return 产品信息
      */
+    @ApiOperation(value="获取产品",notes="根据id获取单个产品信息")
+    @ApiImplicitParams({ @ApiImplicitParam(paramType="path", name = "id", value = "产品id", required = true, dataType = "Long")})
+    @CrossOrigin
     @GetMapping("/get/list")
     public OutputListResult<Product> getList() {
 
@@ -54,9 +82,13 @@ public class ProductController {
     }
 
     /**
-     * 获取列表
-     * 分页模式
+     * 根据用户id获取单个产品信息
+     * @param id 产品id
+     * @return 产品信息
      */
+    @ApiOperation(value="获取产品",notes="根据id获取单个产品信息")
+    @ApiImplicitParams({ @ApiImplicitParam(paramType="path", name = "id", value = "产品id", required = true, dataType = "Long")})
+    @CrossOrigin
     @GetMapping("/get/list/page")
     public OutputListResult<Product> getListPage() {
         PageInfo<Product> pageInfo = null;

@@ -31,7 +31,7 @@ import java.util.Map;
  * @author daniel
  * @date 2019-12-30
  */
-@Api(value="swagger测试", description="TestController")
+@Api(value="用户模块", tags = {"用户模块接口"})
 @RestController
 @Slf4j
 @RequiredArgsConstructor
