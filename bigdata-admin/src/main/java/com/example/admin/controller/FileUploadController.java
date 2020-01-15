@@ -2,6 +2,7 @@ package com.example.admin.controller;
 
 import com.example.admin.dto.response.OutputResult;
 import com.example.core.constants.ResponseCode;
+import com.example.core.constants.StandardRepository;
 import com.example.core.exception.ApplicationException;
 import com.example.core.service.IFileUploadService;
 import com.example.core.utils.FileUtil;
@@ -22,8 +23,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 文件上传接口
@@ -109,7 +112,7 @@ public class FileUploadController {
             return new OutputResult<>(ResponseCode.IMAGE_IO_READ_ERROR);
         }
         //校验上传图片尺寸大小
-        Boolean checkResult = checkImageSize(sourceImage, checkFlag);
+        Boolean checkResult = checkImageSize(sourceImage, targetType, checkFlag);
         if(false == checkResult) {
             log.error("【文件上传：图片上传接口-上传图片尺寸大小不符合要求】");
             return new OutputResult<>(ResponseCode.IMAGE_SIZE_CHECK_ERROR);
@@ -130,10 +133,11 @@ public class FileUploadController {
     /**
      * 上传图片模块
      * @param sourceImage 图片信息
+     * @param targetType 图片所属类别，头像，名片，营业执照等
      * @param checkFlag 是否需要检查尺寸标志
      * @throws ApplicationException 上传异常
      */
-    private Boolean checkImageSize(BufferedImage sourceImage, Boolean checkFlag) {
+    private Boolean checkImageSize(BufferedImage sourceImage, Integer targetType, Boolean checkFlag) throws ApplicationException{
 
         //判断是否需要检查尺寸
         if(false == checkFlag) {
@@ -143,7 +147,14 @@ public class FileUploadController {
         //需要检查尺寸
         int width = sourceImage.getWidth();
         int height = sourceImage.getHeight();
-//        String key = String.valueOf(targetType) + (type == null ? "" : ("-" + String.valueOf(type)));
+        //String key = String.valueOf(targetType) + (type == null ? "" : ("-" + String.valueOf(type)));
+        String key = targetType.toString();
+        Map<String, Object> fileRepository = StandardRepository.fileRepository;
+        if(! fileRepository.containsKey(key)) {
+            log.error("【文件上传：图片上传接口-上传图片尺寸大小不符合要求】");
+            throw new ApplicationException(ResponseCode.IMAGE_SIZE_CHECK_ERROR);
+        }
+        Object standard = fileRepository.get(key);
 //        if (mapTargetCheckImageSize.containsKey(key)) {
 //            // 有该参数，进行校验
 //            List<Integer> sizes = mapTargetCheckImageSize.get(key);
