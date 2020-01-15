@@ -1,6 +1,7 @@
 package com.example.admin.controller;
 
 import com.example.admin.dto.response.OutputResult;
+import com.example.core.constants.ResponseCode;
 import com.example.core.exception.ApplicationException;
 import com.example.core.service.IFileUploadService;
 import com.example.core.utils.FileUtil;
@@ -79,27 +80,26 @@ public class FileUploadController {
 
         MultipartFile imageFile = imageRequest.getFile(FILE_IMAGE_NAME);
         if (null == imageFile){
-            log.error("");
-            return new OutputResult<>();
-            //throw new WrongOperationException("请上传图片");
+            log.error("【文件上传：图片上传接口-上传图片文件不存在】");
+            return new OutputResult<>(ResponseCode.IMAGE_NOT_EXIST_ERROR);
         }
         String imageName = imageFile.getOriginalFilename();
         if (StringUtils.isEmpty(imageName)){
-            log.error("");
-            return new OutputResult<>();
-            //throw new WrongOperationException("请设置图片的文件名称");
+            log.error("【文件上传：图片上传接口-上传图片文件没有名称】");
+            return new OutputResult<>(ResponseCode.IMAGE_NAME_NOT_EXIST_ERROR);
         }
         String contentType = imageFile.getContentType();
         if (null == contentType || ! contentType.contains(IMAGE_FLAG)) {
-            log.error("");
-            return new OutputResult<>();
-            //throw new WrongOperationException("请上传图片");
+            log.error("【文件上传：图片上传接口-上传文件不是图片类型】");
+            return new OutputResult<>(ResponseCode.IMAGE_TYPE_ERROR);
         }
+        //拼接图片文件的存储路径
         StringBuilder url = new StringBuilder();
         url.append(IMAGE_FLAG)
             .append(SPLIT_PATH).append(path)
             .append(SPLIT_PATH).append(System.currentTimeMillis())
             .append(imageName.trim());
+        //校验
         BufferedImage sourceImage = null;
         try {
             sourceImage = ImageIO.read(imageFile.getInputStream());

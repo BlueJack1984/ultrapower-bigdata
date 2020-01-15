@@ -25,6 +25,9 @@ public enum ResponseCode {
     CORPORATION_NOT_EXIST_ERROR(300, "公司信息不存在"),
 
 
+    IMAGE_NOT_EXIST_ERROR(400, "上传的图片不存在"),
+    IMAGE_NAME_NOT_EXIST_ERROR(401, "上传的图片没有名称"),
+    IMAGE_TYPE_ERROR(402, "上传文件不是图片类型"),
 
 
 
