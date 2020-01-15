@@ -151,12 +151,22 @@ public class UserServiceImpl implements IUserService {
         userDao.updateById(entity);
     }
 
+    /**
+     * 新增一个用户
+     * @param entity 实体信息，其中可能包含id，也可能没有id
+     * @return 无返回
+     */
     @Override
     public void add(User entity) {
         //这里对entity实体进行处理
         userDao.insert(entity);
     }
 
+    /**
+     * 根据id更新实体信息
+     * @param modifyMap 实体信息，其中包含id
+     * @return 无返回
+     */
     @Override
     public User modifyInformation(Map<String, Object> modifyMap) {
 
@@ -177,7 +187,9 @@ public class UserServiceImpl implements IUserService {
      ***************************************************************************************/
     /**
      * 根据id更新实体信息
-     * @param entity 实体信息，其中包含id
+     * @param user 实体信息，其中包含id
+     * @param businessCardUrlList 实体信息，其中包含id
+     * @param businessLicenseUrlList 实体信息，其中包含id
      * @return 无返回
      */
     @Transactional(rollbackFor = Exception.class)
@@ -200,7 +212,8 @@ public class UserServiceImpl implements IUserService {
         user1.setStatus(0);
         user1.setCreateTime(new Date());
         user1.setUpdateTime(new Date());
-        userDao.insert(user1);
+        //userDao.insert(user1);
+        add(user1);
         return user1;
     }
 }

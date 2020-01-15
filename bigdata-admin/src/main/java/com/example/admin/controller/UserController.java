@@ -59,7 +59,7 @@ public class UserController {
      * 根据用户id获取单个用户信息
      * @param searchDateStart 查询用户的创建时间起始点
      * @param searchDateEnd 查询用户的创建时间结束点
-     * @param keywords 输入的用户账号参数
+     * @param keyword 输入的用户账号参数
      * @param offSet 查询的页码
      * @param pageSize 每页显示的数据条数
      * @return user列表信息

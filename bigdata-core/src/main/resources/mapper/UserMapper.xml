@@ -29,7 +29,8 @@
   <select id="selectListAll" resultType="com.example.core.entity.User">
     select <include refid="c_user" />
     from <include refid="t_user"/> _user
-    where status = 0
+    <!--把删除的用户排除-->
+    where status != 10
   </select>
 
   <select id="selectListByConditionPage" resultType="com.example.core.entity.User">
