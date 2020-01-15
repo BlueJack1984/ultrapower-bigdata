@@ -241,6 +241,15 @@ public class FileUploadServiceImpl implements IFileUploadService {
         // 对word和pdf类型文档内容的敏感信息进行审核
     }
 
+    /**
+     * 上传图片文件
+     * @param imageInputStream 图片数据流
+     * @param targetType 图片所属类别，如头像、名片、营业执照等
+     * @param imageSize 图片尺寸
+     * @param url 图片存储路径（部分目录）
+     * @return 图片资源访问地址
+     * @throws ApplicationException 上传图片异常
+     */
     @Override
     public String uploadImage(InputStream imageInputStream, Integer targetType, Long imageSize, String url) throws ApplicationException {
 
@@ -248,6 +257,15 @@ public class FileUploadServiceImpl implements IFileUploadService {
         return uploadUrl;
     }
 
+    /**
+     * 上传文件,包含word，pdf两种文件格式
+     * @param documentInputStream 文件数据流
+     * @param targetType 文件所属类别，如政策、资讯等
+     * @param documentSize 文件大小
+     * @param url 文件存储路径（部分目录）
+     * @return 文件资源访问地址
+     * @throws ApplicationException 上传文件产生的异常
+     */
     @Override
     public String uploadDocument(InputStream documentInputStream, Integer targetType, Long documentSize, String url) throws ApplicationException {
         String uploadUrl = ossFileStorageService.storage(documentInputStream, documentSize, url);

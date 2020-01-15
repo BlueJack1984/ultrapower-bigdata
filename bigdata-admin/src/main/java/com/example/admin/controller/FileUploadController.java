@@ -99,29 +99,29 @@ public class FileUploadController {
             .append(SPLIT_PATH).append(path)
             .append(SPLIT_PATH).append(System.currentTimeMillis())
             .append(imageName.trim());
-        //校验
+        //获取文件流
         BufferedImage sourceImage = null;
         try {
             sourceImage = ImageIO.read(imageFile.getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
-            log.error("");
-            return new OutputResult<>();
+            log.error("【文件上传：图片上传接口-BufferedImage组件无法读取图片文件数据流】");
+            return new OutputResult<>(ResponseCode.IMAGE_IO_READ_ERROR);
         }
-        Boolean checkResult = checkSize(sourceImage, checkFlag);
+        //校验上传图片尺寸大小
+        Boolean checkResult = checkImageSize(sourceImage, checkFlag);
         if(false == checkResult) {
-            log.error("");
-            return new OutputResult<>();
+            log.error("【文件上传：图片上传接口-上传图片尺寸大小不符合要求】");
+            return new OutputResult<>(ResponseCode.IMAGE_SIZE_CHECK_ERROR);
         }
         InputStream imageInputStream = null;
         try {
             imageInputStream = imageFile.getInputStream();
         } catch (IOException e) {
             e.printStackTrace();
-            log.error("");
-            return new OutputResult<>();
+            log.error("【文件上传：图片上传接口-无法打开图片文件数据流】");
+            return new OutputResult<>(ResponseCode.IMAGE_IO_READ_ERROR);
         }
-
         //创建一个通用的多部分解析器
         String imageUrl = fileUploadService.uploadImage(imageInputStream, targetType, imageFile.getSize(), url.toString());
         return  new OutputResult<>(imageUrl);
@@ -133,11 +133,11 @@ public class FileUploadController {
      * @param checkFlag 是否需要检查尺寸标志
      * @throws ApplicationException 上传异常
      */
-    private Boolean checkSize(BufferedImage sourceImage, Boolean checkFlag) {
+    private Boolean checkImageSize(BufferedImage sourceImage, Boolean checkFlag) {
 
         //判断是否需要检查尺寸
         if(false == checkFlag) {
-            log.info("不需要检查尺寸！");
+            log.info("不需要检查图片尺寸！");
             return true;
         }
         //需要检查尺寸

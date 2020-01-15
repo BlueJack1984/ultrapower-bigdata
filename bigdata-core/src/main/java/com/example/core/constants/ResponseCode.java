@@ -28,6 +28,8 @@ public enum ResponseCode {
     IMAGE_NOT_EXIST_ERROR(400, "上传的图片不存在"),
     IMAGE_NAME_NOT_EXIST_ERROR(401, "上传的图片没有名称"),
     IMAGE_TYPE_ERROR(402, "上传文件不是图片类型"),
+    IMAGE_IO_READ_ERROR(403, "无法读取上传图片的数据流"),
+    IMAGE_SIZE_CHECK_ERROR(404, "上传图片尺寸大小不符合要求"),
 
 
 
