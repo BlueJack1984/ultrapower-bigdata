@@ -268,6 +268,8 @@ public class FileUploadServiceImpl implements IFileUploadService {
      */
     @Override
     public String uploadDocument(InputStream documentInputStream, Integer targetType, Long documentSize, String url) throws ApplicationException {
+
+        //这里处理文档类型相关信息，涉及数据库插入操作
         String uploadUrl = ossFileStorageService.storage(documentInputStream, documentSize, url);
         return uploadUrl;
     }

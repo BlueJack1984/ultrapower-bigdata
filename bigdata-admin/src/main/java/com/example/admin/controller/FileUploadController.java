@@ -42,6 +42,7 @@ public class FileUploadController {
 
     private final FileUtil fileUtil;
     private final IFileUploadService fileUploadService;
+    private static final Map<String, Object> fileRepository = StandardRepository.fileRepository;
 
     private static final String FILE_IMAGE = "imagefile";
     private static final String IMAGE_FLAG = "image";
@@ -115,7 +116,7 @@ public class FileUploadController {
         Boolean checkResult = checkImageSize(sourceImage, targetType, checkFlag);
         if(false == checkResult) {
             log.error("【文件上传：图片上传接口-上传图片尺寸大小不符合要求】");
-            return new OutputResult<>(ResponseCode.IMAGE_SIZE_CHECK_ERROR);
+            return new OutputResult<>(ResponseCode.IMAGE_SIZE_LIMIT_ERROR);
         }
         InputStream imageInputStream = null;
         try {
@@ -149,22 +150,19 @@ public class FileUploadController {
         int height = sourceImage.getHeight();
         //String key = String.valueOf(targetType) + (type == null ? "" : ("-" + String.valueOf(type)));
         String key = targetType.toString();
-        Map<String, Object> fileRepository = StandardRepository.fileRepository;
+        //Map<String, Object> fileRepository = StandardRepository.fileRepository;
         if(! fileRepository.containsKey(key)) {
-            log.error("【文件上传：图片上传接口-上传图片尺寸大小不符合要求】");
-            throw new ApplicationException(ResponseCode.IMAGE_SIZE_CHECK_ERROR);
+            log.error("【文件上传：图片上传接口-标准仓库中没有该图片类型的校验数据】");
+            throw new ApplicationException(ResponseCode.IMAGE_STANDARD_NOT_EXIST_ERROR);
         }
         Object standard = fileRepository.get(key);
-//        if (mapTargetCheckImageSize.containsKey(key)) {
-//            // 有该参数，进行校验
-//            List<Integer> sizes = mapTargetCheckImageSize.get(key);
-//            int w = sizes.get(0);
-//            int h = sizes.get(1);
-//            if (width != w && height != h) {
-//
-//                //throw new WrongOperationException("请确定尺寸，图片尺寸应为" + w + "*" + h);
-//            }
-//        }
+        Integer standardWidth = 0;
+        Integer standardHeight = 0;
+        if(width >= standardWidth || height >= standardHeight) {
+            log.error("【文件上传：图片上传接口-上传的图片尺寸超出规定标准】");
+            return false;
+        }
+        //图片通过审核
         return true;
     }
 
@@ -194,26 +192,24 @@ public class FileUploadController {
         //判断上传文件是否存在
         MultipartFile documentFile = documentRequest.getFile(FILE_NAME);
         if(null == documentFile) {
-            log.error("");
-            return new OutputResult<>();
-            //throw new ApplicationException(ApplicationException.PARAM_ERROR, "没有上传附件文件");
+            log.error("【文件上传：document文档上传接口-上传文件不存在】");
+            return new OutputResult<>(ResponseCode.DOCUMENT_NOT_EXIST_ERROR);
         }
         //根据传递参数判断文件类型
         String contentType = documentFile.getContentType();
         String fileName = documentFile.getOriginalFilename();
         if(StringUtils.isEmpty(fileName)) {
-            log.error("");
-            return new OutputResult<>();
-            //throw new ApplicationException(1, "上传文件名为空，请设置上传文件名称");
+            log.error("【文件上传：document文档上传接口-上传的文档没有名称】");
+            return new OutputResult<>(ResponseCode.DOCUMENT_NAME_NOT_EXIST_ERROR);
         }
-        StringBuilder url = new StringBuilder();
         //判断上传文件是否为正确的类型，通过请求头的contentType判断
         if(contentType == null || ! (contentType.contains(WORD_FLAG) || contentType.contains(PDF_FLAG) ||
                 (contentType.contains("octet-stream") && ".docx".equals(fileName.substring(fileName.indexOf(".")))))) {
-            log.error("");
-            return new OutputResult<>();
-            //throw new ApplicationException(ApplicationException.PARAM_ERROR, "附件请求contentType参数错误,只能是word或pdf文档");
+            log.error("【文件上传：document文档上传接口-上传的文档不是word或者pdf格式】");
+            return new OutputResult<>(ResponseCode.DOCUMENT_FORMAT_ERROR);
         }
+        //拼接url存储目录地址
+        StringBuilder url = new StringBuilder();
         if(contentType.contains(WORD_FLAG) || contentType.contains("octet-stream")) {
             url.append(WORD_FLAG);
         }else {
@@ -221,47 +217,58 @@ public class FileUploadController {
         }
         url.append(SPLIT_PATH).append(path).append(SPLIT_PATH).append(System.currentTimeMillis()).append(fileName.trim());
         //检验文件大小
-        if(checkFlag) {
-            //checkFileSize(file);
+        Boolean checkResult = checkDocumentSize(documentFile, targetType, checkFlag);
+        if(! checkResult) {
+            log.error("【文件上传：document文档上传接口-上传文件大小超出最大限制】");
+            throw new ApplicationException(ResponseCode.DOCUMENT_SIZE_LIMIT_ERROR);
         }
         InputStream documentInputStream = null;
         try {
             documentInputStream = documentFile.getInputStream();
         } catch (IOException e) {
             e.printStackTrace();
-            log.error("oss上传文件异常：{}", e.getMessage());
-            return new OutputResult<>();
-            //throw new AlibabaOssException("上传文件异常");
+            log.error("【文件上传：document文档上传接口-无法打开上传文档的数据流】");
+            throw new ApplicationException(ResponseCode.DOCUMENT_IO_OPERATION_ERROR);
         }
-
-//        InputStream inputStream = null;
-//        try {
-//            inputStream = file.getInputStream();
-//        } catch (IOException e) {
-//            log.error("oss上传文件异常：{}", e.getMessage());
-//            throw new AlibabaOssException("上传文件异常");
-//        }
-//        String fileUrl = fileStorageServer.storage(inputStream, file.getSize(), url.toString());
         //创建一个通用的多部分解析器
         String documentUrl = fileUploadService.uploadDocument(documentInputStream, targetType, documentFile.getSize(), url.toString());
         return  new OutputResult<>(documentUrl);
     }
 
-        /**
-     * @author lushusheng 2018-10-09
+    /**
      * 上传文件到oss,包含word，pdf两种文件格式
      * @param documentFile 需要检查大小的文件
-     * @return 无
+     * @param targetType 文档的所属类型，如政策、产品等
+     * @param checkFlag 是否需要校验尺寸大小标志
+     * @return 返回校验结果
      * @throws ApplicationException 上传文件产生的异常
      */
-    private Boolean checkFileSize(MultipartFile documentFile)throws ApplicationException {
+    private Boolean checkDocumentSize(MultipartFile documentFile, Integer targetType, Boolean checkFlag)throws ApplicationException {
+
+        if(false == checkFlag) {
+            log.info("上传的文档不需要校验，审核通过！");
+            return true;
+        }
+        //从仓库中获取标准数据
+        String key = targetType.toString();
+        if(! fileRepository.containsKey(key)) {
+            log.error("【文件上传：document文档上传接口-标准仓库中没有该文档类型的校验数据】");
+            throw new ApplicationException(ResponseCode.DOCUMENT_STANDARD_NOT_EXIST_ERROR);
+        }
+        Object standard = fileRepository.get(key);
+        Long standSize = 1L;
         //获取文件的字节大小，单位byte
         long size = documentFile.getSize();
-//        if(size > FILE_MAX_SIZE) {
-//            throw new ApplicationException(1, "上传文件大小超出最大限制，请重新上传文件");
-//        }
+        if(size > standSize) {
+            log.info("上传文件大小超出最大限制");
+            return false;
+        }
+        //文档尺寸满足要求
         return true;
     }
+
+
+
     /**
      * @param documents
      * @return

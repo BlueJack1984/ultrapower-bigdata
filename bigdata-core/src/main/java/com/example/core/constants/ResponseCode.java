@@ -29,8 +29,17 @@ public enum ResponseCode {
     IMAGE_NAME_NOT_EXIST_ERROR(401, "上传的图片没有名称"),
     IMAGE_TYPE_ERROR(402, "上传文件不是图片类型"),
     IMAGE_IO_READ_ERROR(403, "无法读取上传图片的数据流"),
-    IMAGE_SIZE_CHECK_ERROR(404, "上传图片尺寸大小不符合要求"),
+    IMAGE_SIZE_LIMIT_ERROR(404, "上传图片尺寸大小不符合要求"),
+    IMAGE_STANDARD_NOT_EXIST_ERROR(405, "标准仓库中没有该图片类型的校验数据"),
 
+
+
+    DOCUMENT_NOT_EXIST_ERROR(500, "上传的文档不存在"),
+    DOCUMENT_NAME_NOT_EXIST_ERROR(501, "上传的文档没有名称"),
+    DOCUMENT_FORMAT_ERROR(502, "上传的文档不是word或者pdf格式"),
+    DOCUMENT_STANDARD_NOT_EXIST_ERROR(503, "标准仓库中没有该文档类型的校验数据"),
+    DOCUMENT_SIZE_LIMIT_ERROR(504, "上传文件大小超出最大限制"),
+    DOCUMENT_IO_OPERATION_ERROR(505, "无法获取上传文档的数据流"),
 
 
 
