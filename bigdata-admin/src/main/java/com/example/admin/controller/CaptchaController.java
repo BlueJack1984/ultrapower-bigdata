@@ -51,6 +51,7 @@ public class CaptchaController {
         String captchaValue = captchaUtil.generateMix(count);
         captchaResult.setCaptchaValue(captchaValue);
         //获取的验证码需要通过短信发送到手机
+        //占位置
         rabbitmqService.sendByFanout();
         //获取的验证码也需要存到redis中
         redisUtil.set(captchaKey, captchaValue, 1000);

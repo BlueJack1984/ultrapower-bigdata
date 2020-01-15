@@ -7,7 +7,7 @@ package com.example.core.constants;
  */
 public enum StatusCode {
 
-    NORMAL(0, "正常"),
+    NORMAL(0, "正常使用"),
     FORBIDDEN(1, "禁用"),
     TOAUDIT(2, "待审核"),
     /**

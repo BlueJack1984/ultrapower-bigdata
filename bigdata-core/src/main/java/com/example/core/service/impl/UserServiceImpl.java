@@ -1,8 +1,11 @@
 package com.example.core.service.impl;
 
+import com.example.core.constants.ResponseCode;
 import com.example.core.dao.IUserDao;
 import com.example.core.entity.User;
+import com.example.core.exception.ApplicationException;
 import com.example.core.service.IUserService;
+import com.example.core.utils.DateUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -12,6 +15,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +32,8 @@ import java.util.Map;
 public class UserServiceImpl implements IUserService {
 
     private final IUserDao userDao;
+    private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    private final DateUtil dateUtil;
 
     /****************************************************************************************
                                        查询相关
@@ -54,7 +61,7 @@ public class UserServiceImpl implements IUserService {
     public User getByAccount(String account) {
 
         if(StringUtils.isEmpty(account)) {
-            log.info("");
+            log.info("【user---根据账户account查询用户，account参数为空】");
             return null;
         }
         User user = userDao.selectByAccount(account);
@@ -73,34 +80,55 @@ public class UserServiceImpl implements IUserService {
     }
 
     /**
-     *
+     * 多条件查询用户列表
      * @param conditionMap
-     * * @param searchDateStart 查询用户的创建时间起始点
-     *      * @param searchDateEnd 查询用户的创建时间结束点
-     *      * @param keywords 输入的用户账号参数
-     *      * @param offSet 查询的页码
-     *      * @param pageSize 每页显示的数据条数
+     * param searchDateStart 查询用户的创建时间起始点
+     * param searchDateEnd 查询用户的创建时间结束点
+     * param keywords 输入的用户账号参数
+     * param offSet 查询的页码
+     * param pageSize 每页显示的数据条数
      * @return
      */
     @Override
-    public PageInfo<User> getListByConditionPage(Map<String, Object> conditionMap) {
+    public PageInfo<User> getListByConditionPage(Map<String, Object> conditionMap) throws ApplicationException{
 
         Integer offset = (Integer) conditionMap.get("offset");
         Integer pageSize = (Integer) conditionMap.get("pageSize");
+
+        String keyword = (String) conditionMap.get("keyword");
+        String searchDateStart = (String) conditionMap.get("searchDateStart");
+        String searchDateEnd = (String) conditionMap.get("searchDateEnd");
+        Date dateStart = stringToDateFormat(searchDateStart, DATE_FORMAT);
+        Date dateEnd = stringToDateFormat(searchDateEnd, DATE_FORMAT);
         //分页操作
         Page<User> page = PageHelper.startPage(offset, pageSize);
-        List<User> userList = userDao.selectListByConditionPage();
-        PageInfo<User> pageInfo = new PageInfo<User>(userList);
+        List<User> userList = userDao.selectListByConditionPage(dateStart, dateEnd, keyword);
+        PageInfo<User> pageInfo = new PageInfo<>(userList);
         return pageInfo;
+        //RowBounds rowBounds = new RowBounds(offSet, pageSize);
+        //List<Information> list = null;
+        //list = informationMapper.selectListByCondition(condition, rowBounds);
+    }
 
-//        Integer offSet = (Integer) condition.get("offSet");
-//        Integer pageSize = (Integer)condition.get("pageSize");
-//        //String keywords = (String)condition.get("keywords");
-//        //String sourceCode = (String)condition.get("sourceCode");
-//        RowBounds rowBounds = new RowBounds(offSet, pageSize);
-//        List<Information> list = null;
-//        list = informationMapper.selectListByCondition(condition, rowBounds);
-//        return list;
+    /**
+     * 校验日期字符串
+     * @param dateString 查询用户的创建时间起始点
+     * @param dateFormat 查询用户的创建时间结束点
+     * @return
+     */
+    private Date stringToDateFormat(String dateString, String dateFormat) throws ApplicationException{
+
+        if(StringUtils.isEmpty(dateString)) {
+            log.info("搜索的日期参数为空！");
+            return null;
+        }
+        //日期字符串不为空
+        Date date = dateUtil.StringToDate(dateString, dateFormat);
+        if(null == date) {
+            log.error("【user：多条件查询用户列表接口中-日期格式转换错误】");
+            throw new ApplicationException(ResponseCode.DATE_FORMAT_CONVERSION_ERROR);
+        }
+        return date;
     }
 
     /****************************************************************************************

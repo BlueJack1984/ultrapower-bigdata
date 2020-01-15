@@ -1,6 +1,7 @@
 package com.example.core.service;
 
 import com.example.core.entity.User;
+import com.example.core.exception.ApplicationException;
 import com.example.core.service.base.IBaseService;
 import com.github.pagehelper.PageInfo;
 
@@ -30,7 +31,7 @@ public interface IUserService extends IBaseService<Long, User> {
      * @param conditionMap
      * @return
      */
-    PageInfo<User> getListByConditionPage(Map<String, Object> conditionMap);
+    PageInfo<User> getListByConditionPage(Map<String, Object> conditionMap) throws ApplicationException;
 
     /**
      *

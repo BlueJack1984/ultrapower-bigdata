@@ -35,7 +35,13 @@
   <select id="selectListByConditionPage" resultType="com.example.core.entity.User">
     select <include refid="c_user" />
     from <include refid="t_user"/> _user
-    where status = 0
+    where 1 = 1
+    <!--把删除的用户排除-->
+    and status != 10
+    <if test="searchDateStart != null"> and create_time &gt;= #{searchDateStart} </if>
+    <if test="searchDateEnd != null"> and create_time &lt;= #{searchDateEnd} </if>
+    <if test="keyword != null"> and account like concat("%", #{keyword}, "%") </if>
+    order by create_time desc
   </select>
 
 

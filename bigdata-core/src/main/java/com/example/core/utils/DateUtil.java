@@ -18,18 +18,22 @@ import java.util.Date;
 @Slf4j
 public final class DateUtil {
 
+    private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
     /**
      * 字符串转日期
-     * @param dateStr
-     * @param formatStr
+     * @param dateString
+     * @param formatString
      * @return
      */
-    public Date StringToDate(String dateStr, String formatStr) {
-        SimpleDateFormat dd = new SimpleDateFormat(formatStr);
+    public Date StringToDate(String dateString, String formatString) {
+
+        SimpleDateFormat sdf = new SimpleDateFormat(formatString);
         Date date = null;
         try {
-            date = dd.parse(dateStr);
+            date = sdf.parse(dateString);
         } catch (ParseException e) {
+            log.info("【DateUtil---日期字符串参数转换为日期Date异常】");
             e.printStackTrace();
         }
         return date;

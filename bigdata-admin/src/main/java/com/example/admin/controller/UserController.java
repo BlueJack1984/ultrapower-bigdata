@@ -77,14 +77,14 @@ public class UserController {
     public OutputListResult<User> getListByConditionPage(
             @RequestParam(value = "searchDateStart", required = false)String searchDateStart,
             @RequestParam(value = "searchDateEnd", required = false)String searchDateEnd,
-            @RequestParam(value = "keywords", required = false)String keywords,
+            @RequestParam(value = "keyword", required = false)String keyword,
             @RequestParam(value = "offSet",required = false, defaultValue = "1") Integer offSet,
-            @RequestParam(value = "pageSize", required = false, defaultValue = "10") String pageSize) {
+            @RequestParam(value = "pageSize", required = false, defaultValue = "10") String pageSize) throws ApplicationException{
 
         Map<String, Object> conditionMap = new HashMap<>();
         conditionMap.put("searchDateStart", searchDateStart);
         conditionMap.put("searchDateEnd", searchDateEnd);
-        conditionMap.put("keywords", keywords);
+        conditionMap.put("keyword", keyword);
         conditionMap.put("offSet", offSet);
         conditionMap.put("pageSize", pageSize);
         PageInfo<User> pageInfo = userService.getListByConditionPage(conditionMap);

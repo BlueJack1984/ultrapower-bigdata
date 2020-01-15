@@ -1,5 +1,7 @@
 package com.example.core.exception;
 
+import com.example.core.constants.ResponseCode;
+
 /**
  * 自定义应用异常
  * @author daniel
@@ -191,5 +193,10 @@ public class ApplicationException extends Exception{
         super();
         this.code = code;
         this.message = message;
+    }
+
+    public ApplicationException(ResponseCode responseCode) {
+        this.code = responseCode.getCode();
+        this.message = responseCode.getMessage();
     }
 }
