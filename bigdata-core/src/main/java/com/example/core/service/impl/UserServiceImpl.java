@@ -103,14 +103,14 @@ public class UserServiceImpl implements IUserService {
         String searchDateEnd = (String) conditionMap.get("searchDateEnd");
         Date dateStart = stringToDateFormat(searchDateStart, DATE_FORMAT);
         Date dateEnd = stringToDateFormat(searchDateEnd, DATE_FORMAT);
+        //RowBounds rowBounds = new RowBounds(offSet, pageSize);
+        //List<Information> list = null;
+        //list = informationMapper.selectListByCondition(condition, rowBounds);
         //分页操作
         Page<User> page = PageHelper.startPage(offset, pageSize);
         List<User> userList = userDao.selectListByConditionPage(dateStart, dateEnd, keyword);
         PageInfo<User> pageInfo = new PageInfo<>(userList);
         return pageInfo;
-        //RowBounds rowBounds = new RowBounds(offSet, pageSize);
-        //List<Information> list = null;
-        //list = informationMapper.selectListByCondition(condition, rowBounds);
     }
 
     /**
