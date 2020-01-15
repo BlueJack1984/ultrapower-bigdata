@@ -3,6 +3,7 @@ package com.example.admin.controller;
 import com.example.admin.dto.request.UserInput;
 import com.example.admin.dto.response.OutputListResult;
 import com.example.admin.dto.response.OutputResult;
+import com.example.core.constants.ResponseCode;
 import com.example.core.entity.User;
 import com.example.core.exception.ApplicationException;
 import com.example.core.service.IUserService;
@@ -141,13 +142,13 @@ public class UserController {
     @ApiImplicitParams({@ApiImplicitParam(paramType = "body", dataType = "UserInput", name = "userInput", value = "修改的用户信息", required = true)})
     @CrossOrigin
     @PostMapping("/information/modify")
-    public OutputResult<User> modifyInformation(@RequestBody UserInput userInput) {
+    public OutputResult<User> modifyInformation(@RequestBody UserInput userInput) throws ApplicationException{
 
         //判断账号参数
         String account = userInput.getAccount();
         if(StringUtils.isEmpty(account)) {
-            log.error("");
-            return new OutputResult<>(null);
+            log.error("用户账号参数为空");
+            return new OutputResult<>(ResponseCode.USER_REQUEST_PARAMETER_ERROR);
         }
         //根据账号查询用户
         Map<String, Object> modifyMap = new HashMap<>();

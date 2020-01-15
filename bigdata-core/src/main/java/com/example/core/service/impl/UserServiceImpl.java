@@ -2,8 +2,10 @@ package com.example.core.service.impl;
 
 import com.example.core.constants.ResponseCode;
 import com.example.core.dao.IUserDao;
+import com.example.core.entity.Corporation;
 import com.example.core.entity.User;
 import com.example.core.exception.ApplicationException;
+import com.example.core.service.ICorporationService;
 import com.example.core.service.IUserService;
 import com.example.core.utils.DateUtil;
 import com.github.pagehelper.Page;
@@ -34,6 +36,7 @@ public class UserServiceImpl implements IUserService {
     private final IUserDao userDao;
     private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
     private final DateUtil dateUtil;
+    private final ICorporationService corporationService;
 
     /****************************************************************************************
                                        查询相关
@@ -156,6 +159,7 @@ public class UserServiceImpl implements IUserService {
      * @param entity 实体信息，其中可能包含id，也可能没有id
      * @return 无返回
      */
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void add(User entity) {
         //这里对entity实体进行处理
@@ -164,21 +168,80 @@ public class UserServiceImpl implements IUserService {
 
     /**
      * 根据id更新实体信息
-     * @param modifyMap 实体信息，其中包含id
+     * @param modifyMap 需要更新的实体信息，其中包含id
      * @return 无返回
      */
     @Override
-    public User modifyInformation(Map<String, Object> modifyMap) {
+    public User modifyInformation(Map<String, Object> modifyMap) throws ApplicationException{
 
         //根据account账号查询
         String account = (String) modifyMap.get("account");
         User user = getByAccount(account);
-
+        if(null == user) {
+            log.error("【user：修改用户个人信息接口-根据账号搜索不到用户实体】");
+            throw new ApplicationException(ResponseCode.USER_NOT_EXIST_ERROR);
+        }
         //更新user实体，判断是否有空值
-
+        copyUserProperties(user, modifyMap);
+        user.setUpdateTime(new Date());
         //更新user实体到数据库中
         modifyById(user);
-        return getByAccount(account);
+        //营业执照，这个在公司表中，根据id查询公司信息进行更新
+        Corporation corporation = corporationService.getById(user.getCorporationId());
+        if(null == corporation) {
+            log.error("【user：修改用户个人信息接口-根据公司id搜索不到公司实体】");
+            throw new ApplicationException(ResponseCode.CORPORATION_NOT_EXIST_ERROR);
+        }
+        //个人名片
+        List<String> businessLicenseUrlList = (List<String>) modifyMap.get("businessLicenseUrlList");
+        if(null != businessLicenseUrlList && businessLicenseUrlList.size() > 0) {
+            //这里对营业执照的数据进行处理后保存
+            //本文目前采用取第一条数据
+            corporation.setBusinessLicenseUrl(businessLicenseUrlList.get(0));
+        }
+        corporation.setUpdateTime(new Date());
+        corporationService.modifyById(corporation);
+        return user;
+    }
+    /**
+     * 根据id更新实体信息
+     * @param target 需要更新的实体信息，其中包含id
+     * @param sourceMap 需要更新的实体信息，其中包含id
+     * @return 无返回
+     */
+    private void copyUserProperties(User target, Map<String, Object> sourceMap) {
+        //用户类型
+        Integer targetType = (Integer) sourceMap.get("targetType");
+        if(null != targetType) {
+            target.setTargetType(targetType);
+        }
+        //真实姓名
+        String realName = (String) sourceMap.get("realName");
+        if(null != realName) {
+            target.setRealName(realName);
+        }
+        //公司名称
+        String corporationName = (String) sourceMap.get("corporationName");
+        if(null != corporationName) {
+            target.setCorporationName(corporationName);
+        }
+        //公司职位
+        String position = (String) sourceMap.get("position");
+        if(null != position) {
+            target.setPosition(position);
+        }
+        //邮箱
+        String email = (String) sourceMap.get("email");
+        if(null != email) {
+            target.setEmail(email);
+        }
+        //个人名片
+        List<String> businessCardUrlList = (List<String>) sourceMap.get("businessCardUrlList");
+        if(null != businessCardUrlList && businessCardUrlList.size() > 0) {
+            //这里对个人名片的数据进行处理后保存
+            //本文目前采用取第一条数据
+            target.setBusinessCardUrl(businessCardUrlList.get(0));
+        }
     }
 
 
@@ -192,10 +255,12 @@ public class UserServiceImpl implements IUserService {
      * @param businessLicenseUrlList 实体信息，其中包含id
      * @return 无返回
      */
-    @Transactional(rollbackFor = Exception.class)
     @Override
     public User add(User user, List<String> businessCardUrlList, List<String> businessLicenseUrlList) {
 
+        //判断用户是否注册
+        //根据填写公司名称查找公司信息
+        //如果没有公司信息则创建
 
 //        User user1 = new User();
 //        user1.setTargetType(0);

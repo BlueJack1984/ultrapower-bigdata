@@ -44,6 +44,6 @@ public interface IUserService extends IBaseService<Long, User> {
      * @param modifyMap
      * @return
      */
-    User modifyInformation(Map<String, Object> modifyMap);
+    User modifyInformation(Map<String, Object> modifyMap) throws ApplicationException;
 
 }
