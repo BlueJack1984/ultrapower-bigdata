@@ -32,6 +32,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     public OutputResult<Void> MyExceptionHandle(MethodArgumentNotValidException exception){
 
+        //        return new OutputError(ApplicationException.PARAM_VALIDATION_ERROR, ex.getMessage());
         exception.printStackTrace();
         BindingResult result = exception.getBindingResult();
         StringBuilder errorMsg = new StringBuilder() ;
@@ -63,20 +64,12 @@ public class GlobalExceptionHandler {
         log.info("自定义异常的message值：" + message);
         return new OutputResult(code, message);
     }
+
     /**
-     * 拦截捕捉参数校验异常 MethodArgumentNotValidException.class
+     * 拦截捕捉参数类型转换异常 HttpMessageConversionException.class
      * @param ex
      * @return
      */
-//    @ExceptionHandler(value = MethodArgumentNotValidException.class)
-//    public OutputError methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException ex) {
-//        return new OutputError(ApplicationException.PARAM_VALIDATION_ERROR, ex.getMessage());
-//    }
-//    /**
-//     * 拦截捕捉参数类型转换异常 HttpMessageConversionException.class
-//     * @param ex
-//     * @return
-//     */
 //    @ExceptionHandler(value = HttpMessageConversionException.class)
 //    public OutputError httpMessageConversionExceptionHandler(HttpMessageConversionException ex) {
 //        return new OutputError(ApplicationException.PARAM_CONVERSION_ERROR, "参数类型转换异常");
