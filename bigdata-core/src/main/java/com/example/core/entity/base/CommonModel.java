@@ -78,5 +78,9 @@ public class CommonModel extends BaseModel{
      * 应用领域：多个id序列，逗号间隔组成字符串
      */
     private String applicationFieldIds;
+    /**
+     * 是否推荐新品
+     */
+    private Integer recommend;
 
 }

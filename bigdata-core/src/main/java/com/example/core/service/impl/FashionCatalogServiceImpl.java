@@ -93,16 +93,22 @@ public class FashionCatalogServiceImpl implements IFashionCatalogService {
         Map<String, Object> collection = new HashMap<>();
         //产品
         List<Long> productIds = map.get(PRODUCT_TARGET_TYPE);
-        List<Product> productList = productService.getListByIds(productIds);
-        collection.put(PRODUCT_TARGET_TYPE, productList);
+        if(null != productIds && productIds.size() > 0) {
+            List<Product> productList = productService.getListByIds(productIds);
+            collection.put(PRODUCT_TARGET_TYPE, productList);
+        }
         //解决方案
         List<Long> solutionIds = map.get(SOLUTION_TARGET_TYPE);
-        List<Solution> solutionList = solutionService.getListByIds(solutionIds);
-        collection.put(SOLUTION_TARGET_TYPE, solutionList);
+        if(null != solutionIds && solutionIds.size() > 0) {
+            List<Solution> solutionList = solutionService.getListByIds(solutionIds);
+            collection.put(SOLUTION_TARGET_TYPE, solutionList);
+        }
         //成功案例
         List<Long> applicationCaseIds = map.get(APPLICATION_CASE_TARGET_TYPE);
-        List<ApplicationCase> applicationCaseList = applicationCaseService.getListByIds(applicationCaseIds);
-        collection.put(APPLICATION_CASE_TARGET_TYPE, applicationCaseList);
+        if(null != applicationCaseIds && applicationCaseIds.size() > 0) {
+            List<ApplicationCase> applicationCaseList = applicationCaseService.getListByIds(applicationCaseIds);
+            collection.put(APPLICATION_CASE_TARGET_TYPE, applicationCaseList);
+        }
         return collection;
     }
 }

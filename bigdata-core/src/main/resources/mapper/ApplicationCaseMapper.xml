@@ -13,7 +13,7 @@
     _application_case.core_functionality coreFunctionality,
     _application_case.detailed_description detailedDescription, _application_case.district,
     _application_case.safety_issue safetyIssue, _application_case.performance,
-    _application_case.application_field_ids applicationFieldIds,
+    _application_case.application_field_ids applicationFieldIds, _application_case.recommend,
     <!--特有属性-->
     _application_case.product_ids productIds, _application_case.solution_ids solutionIds,
     _application_case.partner, _application_case.publish_date publishDate,
@@ -33,7 +33,7 @@
     where status = 0 and id in
     <foreach collection="applicationCaseIds" item="applicationCaseId" open="(" close=")" separator=",">
       <!-- 每次遍历要拼接的串 -->
-      #{applicationCaseIds}
+      #{applicationCaseId}
     </foreach>
     order by create_time desc
   </select>

@@ -11,7 +11,7 @@
     _product.based_frameworks basedFrameworks, _product.core_functionality coreFunctionality,
     _product.detailed_description detailedDescription, _product.district,
     _product.safety_issue safetyIssue, _product.performance,
-    _product.application_field_ids applicationFieldIds,
+    _product.application_field_ids applicationFieldIds, _product.recommend,
     <!--特有属性-->
     _product.solution_ids solutionIds, _product.application_case_ids applicationCaseIds,
     _product.software_patent_name softwarePatentName, _product.software_patent_application_date softwarePatentApplicationDate,

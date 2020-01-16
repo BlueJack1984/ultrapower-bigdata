@@ -48,7 +48,7 @@ public class FashionCatalogController {
     public OutputResult<Map<String, Object>> getListByConditionPage(
             @RequestParam(value = "keyword",required = false) String keyword,
             @RequestParam(value = "offSet",required = false, defaultValue = "1") Integer offSet,
-            @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) throws ApplicationException {
+            @RequestParam(value = "pageSize", required = false, defaultValue = "2") Integer pageSize) throws ApplicationException {
 
         //定义返回的map，key为实体类型，value为实体列表
         Map<String, Object> fashionResultMap = null;

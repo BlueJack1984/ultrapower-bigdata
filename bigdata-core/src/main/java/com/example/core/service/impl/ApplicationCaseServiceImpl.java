@@ -48,6 +48,8 @@ public class ApplicationCaseServiceImpl implements IApplicationCaseService {
 
     @Override
     public List<ApplicationCase> getListByIds(List<Long> applicationCaseIds) {
-        return null;
+
+        List<ApplicationCase> applicationCaseList = applicationCaseDao.selectListByIds(applicationCaseIds);
+        return applicationCaseList;
     }
 }

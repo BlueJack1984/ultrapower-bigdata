@@ -11,7 +11,7 @@
     _solution.based_frameworks basedFrameworks, _solution.core_functionality coreFunctionality,
     _solution.detailed_description detailedDescription, _solution.district,
     _solution.safety_issue safetyIssue, _solution.performance,
-    _solution.application_field_ids applicationFieldIds,
+    _solution.application_field_ids applicationFieldIds, _solution.recommend,
     <!--特有属性-->
     _solution.product_ids productIds, _solution.application_case_ids applicationCaseIds,
     _solution.publish_date publishDate,_solution.certification_status certificationStatus

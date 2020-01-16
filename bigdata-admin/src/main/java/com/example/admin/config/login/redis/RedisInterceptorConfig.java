@@ -33,6 +33,7 @@ public class RedisInterceptorConfig implements WebMvcConfigurer {
         excludePathList.add("/captcha/**");
         excludePathList.add("/sequence/**");
         excludePathList.add("/product/**");
+        excludePathList.add("/fashion/**");
         registration.excludePathPatterns(excludePathList);
         //registration.excludePathPatterns("/**");
     }
