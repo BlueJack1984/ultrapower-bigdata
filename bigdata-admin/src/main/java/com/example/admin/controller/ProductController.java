@@ -99,5 +99,4 @@ public class ProductController {
         PageInfo<Product> pageInfo = null;
         return new OutputListResult<>(pageInfo);
     }
-
 }
