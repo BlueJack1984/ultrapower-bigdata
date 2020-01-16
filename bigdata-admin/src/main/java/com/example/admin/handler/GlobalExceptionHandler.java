@@ -137,7 +137,7 @@ public class GlobalExceptionHandler {
 //     * @param ex
 //     * @return
 //     */
-    @ExceptionHandler(value = Exception.class)
+    //@ExceptionHandler(value = Exception.class)
     public OutputResult<Void> exceptionHandler(Exception ex) {
         Throwable throwable = ex.getCause();
         if (throwable != null && throwable.getCause() != null){

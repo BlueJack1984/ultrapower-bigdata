@@ -13,6 +13,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.models.auth.In;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -67,11 +68,11 @@ public class UserController {
      */
     @ApiOperation(value = "查询用户列表", notes = "多条件查询用户列表信息")
     @ApiImplicitParams({
-        @ApiImplicitParam(paramType = "body", dataType = "String", name = "searchDateStart", value = "查询用户的创建时间起始点", required = false),
-        @ApiImplicitParam(paramType = "body", dataType = "String", name = "searchDateEnd", value = "查询用户的创建时间结束点", required = false),
-        @ApiImplicitParam(paramType = "body", dataType = "String", name = "keywords", value = "输入的用户账号", required = false),
-        @ApiImplicitParam(paramType = "body", dataType = "Integer", name = "offSet", value = "查询的页码", required = false),
-        @ApiImplicitParam(paramType = "body", dataType = "Integer", name = "pageSize", value = "每页显示的数据条数", required = false)
+        @ApiImplicitParam(paramType = "query", dataType = "String", name = "searchDateStart", value = "查询用户的创建时间起始点", required = false),
+        @ApiImplicitParam(paramType = "query", dataType = "String", name = "searchDateEnd", value = "查询用户的创建时间结束点", required = false),
+        @ApiImplicitParam(paramType = "query", dataType = "String", name = "keyword", value = "输入的用户账号", required = false),
+        @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "offSet", value = "查询的页码", required = false),
+        @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "pageSize", value = "每页显示的数据条数", required = false)
     })
     @CrossOrigin
     @GetMapping("/get/list/condition/page")
@@ -80,7 +81,7 @@ public class UserController {
             @RequestParam(value = "searchDateEnd", required = false)String searchDateEnd,
             @RequestParam(value = "keyword", required = false)String keyword,
             @RequestParam(value = "offSet",required = false, defaultValue = "1") Integer offSet,
-            @RequestParam(value = "pageSize", required = false, defaultValue = "10") String pageSize) throws ApplicationException{
+            @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) throws ApplicationException{
 
         Map<String, Object> conditionMap = new HashMap<>();
         conditionMap.put("searchDateStart", searchDateStart);

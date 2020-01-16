@@ -1,5 +1,6 @@
 package com.example.core.service.impl;
 
+import com.example.core.dao.ISolutionDao;
 import com.example.core.dao.IUserDao;
 import com.example.core.entity.News;
 import com.example.core.entity.Solution;
@@ -12,18 +13,22 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class SolutionServiceImpl implements ISolutionService {
 
-    private final IUserDao userDao;
+    private final ISolutionDao solutionDao;
 
 
     @Override
     public PageInfo<Solution> getPage(Integer pageNumber, Integer pageSize) {
         return null;
     }
+
+
 
     @Override
     public Solution getById(Long id) {
@@ -38,5 +43,13 @@ public class SolutionServiceImpl implements ISolutionService {
     @Override
     public void add(Solution entity) {
 
+    }
+
+
+    @Override
+    public List<Solution> getListByIds(List<Long> solutionIds) {
+
+        List<Solution> solutionList = solutionDao.selectListByIds(solutionIds);
+        return solutionList;
     }
 }

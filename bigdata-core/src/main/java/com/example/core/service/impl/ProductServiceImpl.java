@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -20,10 +22,15 @@ public class ProductServiceImpl implements IProductService {
 
     private final IProductDao productDao;
 
+
+    /****************************************************************************************
+                                       基础服务
+     ***************************************************************************************/
     @Override
     public PageInfo<Product> getPage(Integer pageNumber, Integer pageSize) {
         return null;
     }
+
 
     /**
      * 根据id获取实体信息
@@ -45,5 +52,16 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public void add(Product entity) {
 
+    }
+
+
+    /****************************************************************************************
+                                       定制服务
+     ***************************************************************************************/
+    @Override
+    public List<Product> getListByIds(List<Long> productIds) {
+
+        List<Product> productList = productDao.selectListByIds(productIds);
+        return productList;
     }
 }

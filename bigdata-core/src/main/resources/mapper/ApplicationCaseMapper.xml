@@ -27,7 +27,17 @@
     from <include refid="t_application_case"/> _application_case
     where id = #{id,jdbcType=BIGINT}
   </select>
-<!--  <insert id="insert" parameterType="user" >-->
+  <select id="selectListByIds" parameterType="java.util.List" resultType="com.example.core.entity.ApplicationCase">
+    select <include refid="c_application_case" />
+    from <include refid="t_application_case"/> _application_case
+    where status = 0 and id in
+    <foreach collection="applicationCaseIds" item="applicationCaseId" open="(" close=")" separator=",">
+      <!-- 每次遍历要拼接的串 -->
+      #{applicationCaseIds}
+    </foreach>
+    order by create_time desc
+  </select>
+  <!--  <insert id="insert" parameterType="user" >-->
 <!--    insert into <include refid="t_user"/>-->
 <!--    (id, account, password, super_password, real_name, identity_number, nick_name, head_image, phone,-->
 <!--    email, gender, rank_id, status, question_id, answer, last_login_ip, last_login_time, create_time,-->

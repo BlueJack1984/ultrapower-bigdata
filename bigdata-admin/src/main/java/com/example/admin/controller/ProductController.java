@@ -91,7 +91,7 @@ public class ProductController {
     @ApiImplicitParams({ @ApiImplicitParam(paramType="path", name = "id", value = "产品id", required = true, dataType = "Long")})
     @CrossOrigin
     @GetMapping("/get/list/page")
-    public OutputListResult<Product> getListPage() {
+    public OutputListResult<Product> getListByConditionPage() {
         PageInfo<Product> pageInfo = null;
         return new OutputListResult<>(pageInfo);
     }

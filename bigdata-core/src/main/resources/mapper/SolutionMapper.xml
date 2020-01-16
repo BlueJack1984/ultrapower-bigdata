@@ -24,7 +24,17 @@
     from <include refid="t_solution"/> _solution
     where id = #{id,jdbcType=BIGINT}
   </select>
-<!--  <insert id="insert" parameterType="user" >-->
+  <select id="selectListByIds" parameterType="java.util.List" resultType="com.example.core.entity.Solution">
+    select <include refid="c_solution" />
+    from <include refid="t_solution"/> _solution
+    where status = 0 and id in
+    <foreach collection="solutionIds" item="solutionId" open="(" close=")" separator=",">
+      <!-- 每次遍历要拼接的串 -->
+      #{solutionId}
+    </foreach>
+    order by create_time desc
+  </select>
+  <!--  <insert id="insert" parameterType="user" >-->
 <!--    insert into <include refid="t_user"/>-->
 <!--    (id, account, password, super_password, real_name, identity_number, nick_name, head_image, phone,-->
 <!--    email, gender, rank_id, status, question_id, answer, last_login_ip, last_login_time, create_time,-->

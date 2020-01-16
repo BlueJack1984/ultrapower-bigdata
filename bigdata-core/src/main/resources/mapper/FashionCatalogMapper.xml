@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.core.dao.IFashionCatalogDao">
+  <sql id="c_fashion_catalog">
+    <!--最基础属性-->
+    _fashion_catalog.id, _fashion_catalog.status, _fashion_catalog.create_time createTime,
+    _fashion_catalog.update_time updateTime,
+    <!--特有属性-->
+    _fashion_catalog.target_type targetType, _fashion_catalog.target_id targetId,
+    _fashion_catalog.name
+  </sql>
+  <sql id="t_fashion_catalog">
+    fashion_catalog
+  </sql>
+  <select id="selectById" parameterType="java.lang.Long" resultType="com.example.core.entity.FashionCatalog">
+    select <include refid="c_fashion_catalog" />
+    from <include refid="t_fashion_catalog"/> _fashion_catalog
+    where id = #{id,jdbcType=BIGINT} and status = 0
+  </select>
+
+  <select id="selectListByConditionPage" parameterType="java.lang.String" resultType="com.example.core.entity.FashionCatalog">
+    select <include refid="c_fashion_catalog" />
+    from <include refid="t_fashion_catalog"/> _fashion_catalog
+    where 1 = 1 and status = 0
+    <if test="keyword != null"> and `name` like concat("%", #{keyword}, "%") </if>
+    order by create_time desc
+  </select>
+<!--  <insert id="insert" parameterType="user" >-->
+<!--    insert into <include refid="t_user"/>-->
+<!--    (id, account, password, super_password, real_name, identity_number, nick_name, head_image, phone,-->
+<!--    email, gender, rank_id, status, question_id, answer, last_login_ip, last_login_time, create_time,-->
+<!--    create_user_id, update_time, update_user_id, province, city, address, current_login_ip, current_login_time, certification_time)-->
+<!--    values (#{id}, #{account}, #{password}, #{superPassword}, #{realName}, #{identityNumber}, #{nickName},-->
+<!--    #{headImage}, #{phone}, #{email}, #{gender}, #{rankId}, #{status}, #{questionId}, #{answer},-->
+<!--    #{lastLoginIp}, #{lastLoginTime}, #{createTime}, #{createUserId}, #{updateTime}, #{updateUserId},-->
+<!--    #{province}, #{city}, #{address}, #{currentLoginIp}, #{currentLoginTime}, #{certificationTime})-->
+<!--  </insert>-->
+</mapper>
