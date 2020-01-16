@@ -2,6 +2,7 @@ package com.example.admin.handler;
 
 import com.example.admin.dto.response.OutputResult;
 import com.example.core.exception.ApplicationException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.lang.reflect.UndeclaredThrowableException;
 import java.util.List;
 
 /**
@@ -19,12 +21,8 @@ import java.util.List;
  * @date 2019-12-30
  */
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
-
-    @ExceptionHandler(value = Exception.class)
-    public OutputResult<Void> handle() {
-        return null;
-    }
 
     /**
      * 处理@Valid注解产生的异常信息，转换为统一异常返回
@@ -48,6 +46,22 @@ public class GlobalExceptionHandler {
 
         exception.printStackTrace();
         return new OutputResult(-1,errorMsg.toString() );
+    }
+
+
+    /**
+     * 拦截捕捉自定义异常 ApplicationException.class
+     * @param ex
+     * @return
+     */
+    @ExceptionHandler(value = ApplicationException.class)
+    public OutputResult<Void> applicationExceptionHandler(ApplicationException ex) {
+        log.info("进入自定义异常统一处理方法！");
+        Integer code = ex.getCode();
+        log.info("自定义异常的code值：" + code);
+        String message = ex.getMessage();
+        log.info("自定义异常的message值：" + message);
+        return new OutputResult(code, message);
     }
     /**
      * 拦截捕捉参数校验异常 MethodArgumentNotValidException.class
@@ -130,20 +144,30 @@ public class GlobalExceptionHandler {
 //     * @param ex
 //     * @return
 //     */
-//    @ExceptionHandler(value = Exception.class)
-//    public OutputError exceptionHandler(Exception ex) {
-//        Throwable throwable = ex.getCause();
-//        if (throwable != null && throwable.getCause() != null){
-//            if (throwable.getCause() instanceof UndeclaredThrowableException){
-//                UndeclaredThrowableException ut = (UndeclaredThrowableException)throwable.getCause();
-//                Throwable throwable2 = ut.getUndeclaredThrowable();
-//                if (throwable2 instanceof ApplicationException) {
-//                    ApplicationException ae = (ApplicationException) throwable2;
-//                    return new OutputError(ae.getCode(), ae.getMessage());
-//                }
-//            }
-//        }
-//        log.error("收到未知异常：{}", ex);
-//        return new OutputError(ApplicationException.UNKNOWN_ERROR, "未知错误");
-//    }
+    @ExceptionHandler(value = Exception.class)
+    public OutputResult<Void> exceptionHandler(Exception ex) {
+        Throwable throwable = ex.getCause();
+        if (throwable != null && throwable.getCause() != null){
+            if (throwable.getCause() instanceof UndeclaredThrowableException){
+                UndeclaredThrowableException ut = (UndeclaredThrowableException)throwable.getCause();
+                Throwable throwable2 = ut.getUndeclaredThrowable();
+                if (throwable2 instanceof ApplicationException) {
+                    ApplicationException ae = (ApplicationException) throwable2;
+                    return new OutputResult(ae.getCode(), ae.getMessage());
+                }
+            }
+        }
+        log.error("收到未知异常：{}", ex);
+        return new OutputResult(ApplicationException.UNKNOWN_ERROR, "未知错误");
+    }
+
+    /**
+     * 处理@Valid注解产生的异常信息，转换为统一异常返回
+     * @param
+     * @return
+     */
+    @ExceptionHandler(value = Exception.class)
+    public OutputResult<Void> handle() {
+        return null;
+    }
 }

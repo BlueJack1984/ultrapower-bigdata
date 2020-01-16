@@ -1,12 +1,14 @@
 package com.example.core.exception;
 
 import com.example.core.constants.ResponseCode;
+import lombok.Data;
 
 /**
  * 自定义应用异常
  * @author daniel
  * @date 2019-12-23
  */
+@Data
 public class ApplicationException extends Exception{
 
     /**
