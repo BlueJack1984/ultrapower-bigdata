@@ -4,6 +4,7 @@ import com.example.admin.dto.request.ProductInput;
 import com.example.admin.dto.response.OutputListResult;
 import com.example.admin.dto.response.OutputResult;
 import com.example.core.entity.Product;
+import com.example.core.exception.ApplicationException;
 import com.example.core.service.IProductService;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
@@ -67,19 +68,21 @@ public class ProductController {
     }
 
     /**
-     * 根据用户id获取单个产品信息
-     * @param id 产品id
+     * 根据创建时间获取最新产品列表
      * @return 产品信息
      */
-    @ApiOperation(value="获取产品",notes="根据id获取单个产品信息")
-    @ApiImplicitParams({ @ApiImplicitParam(paramType="path", name = "id", value = "产品id", required = true, dataType = "Long")})
+    @ApiOperation(value="根据创建时间获取最新产品列表",notes="根据创建时间获取最新产品列表")
+    @ApiImplicitParams({})
     @CrossOrigin
-    @GetMapping("/get/list")
-    public OutputListResult<Product> getList() {
+    @GetMapping("/get/list/page/latest")
+    public OutputListResult<Product> getLatestListPage(
+            @RequestParam(value = "offSet",required = false, defaultValue = "1") Integer offSet,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) throws ApplicationException {
 
-        List<Product> productList = null;
-
-        return new OutputListResult<>(productList);
+        PageInfo<Product> pageInfo = null;
+        //调用服务接口，keyword参数赋值null
+        pageInfo = productService.getListByConditionPage(null, offSet, pageSize);
+        return new OutputListResult<>(pageInfo);
     }
 
     /**
@@ -92,6 +95,7 @@ public class ProductController {
     @CrossOrigin
     @GetMapping("/get/list/page")
     public OutputListResult<Product> getListByConditionPage() {
+
         PageInfo<Product> pageInfo = null;
         return new OutputListResult<>(pageInfo);
     }

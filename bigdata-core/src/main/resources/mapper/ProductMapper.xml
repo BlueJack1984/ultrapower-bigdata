@@ -39,6 +39,14 @@
     </foreach>
     order by create_time desc
   </select>
+  <select id="getListByConditionPage" parameterType="java.lang.String" resultType="com.example.core.entity.Product">
+    select <include refid="c_product" />
+    from <include refid="t_product"/> _product
+    where status = 0
+    <if test="keyword != null"> and `name` like concat("%", #{keyword}, "%") </if>
+    order by create_time desc
+  </select>
+
 
 
   <!--  <insert id="insert" parameterType="user" >-->

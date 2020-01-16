@@ -7,6 +7,8 @@ import com.example.core.entity.Product;
 import com.example.core.entity.User;
 import com.example.core.service.IProductService;
 import com.example.core.service.IUserService;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -63,5 +65,22 @@ public class ProductServiceImpl implements IProductService {
 
         List<Product> productList = productDao.selectListByIds(productIds);
         return productList;
+    }
+
+    /**
+     * 分页查询产品数据
+     * @param keyword 要查询的关键词
+     * @param offset 需要显示的页码
+     * @param pageSize 每页显示的数量
+     * @return
+     */
+    @Override
+    public PageInfo<Product> getListByConditionPage(String keyword, Integer offset, Integer pageSize) {
+
+        //分页查询
+        Page<Product> page = PageHelper.startPage(offset, pageSize);
+        List<Product> productList = productDao.getListByConditionPage(keyword);
+        PageInfo<Product> pageInfo = new PageInfo<>(productList);
+        return pageInfo;
     }
 }

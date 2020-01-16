@@ -17,4 +17,7 @@ public interface IProductDao extends IBaseDao<Long, Product> {
      * @return
      */
     List<Product> selectListByIds(@Param("productIds") List<Long> productIds);
+
+
+    List<Product> getListByConditionPage(@Param("keyword") String keyword);
 }
