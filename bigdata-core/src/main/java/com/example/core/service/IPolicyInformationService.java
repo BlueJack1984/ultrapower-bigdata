@@ -7,5 +7,4 @@ import com.github.pagehelper.PageInfo;
 
 public interface IPolicyInformationService extends IBaseService<Long, PolicyInformation> {
 
-    PageInfo<PolicyInformation> getPage(Integer pageNumber, Integer pageSize);
 }

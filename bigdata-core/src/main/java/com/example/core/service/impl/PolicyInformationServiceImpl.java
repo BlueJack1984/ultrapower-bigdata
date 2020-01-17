@@ -18,10 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PolicyInformationServiceImpl implements IPolicyInformationService {
 
 
-    @Override
-    public PageInfo<PolicyInformation> getPage(Integer pageNumber, Integer pageSize) {
-        return null;
-    }
+
 
     @Override
     public PolicyInformation getById(Long id) {

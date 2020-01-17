@@ -9,8 +9,6 @@ import java.util.List;
 
 public interface IProductService extends IBaseService<Long, Product> {
 
-    PageInfo<Product> getPage(Integer pageNumber, Integer pageSize);
-
     /**
      *
      * @param productIds

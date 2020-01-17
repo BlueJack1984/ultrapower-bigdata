@@ -28,10 +28,6 @@ public class ProductServiceImpl implements IProductService {
     /****************************************************************************************
                                        基础服务
      ***************************************************************************************/
-    @Override
-    public PageInfo<Product> getPage(Integer pageNumber, Integer pageSize) {
-        return null;
-    }
 
 
     /**

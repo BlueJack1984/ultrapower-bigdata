@@ -24,13 +24,6 @@ public class SolutionServiceImpl implements ISolutionService {
 
 
     @Override
-    public PageInfo<Solution> getPage(Integer pageNumber, Integer pageSize) {
-        return null;
-    }
-
-
-
-    @Override
     public Solution getById(Long id) {
         return null;
     }

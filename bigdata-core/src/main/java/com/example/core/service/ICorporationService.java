@@ -12,7 +12,6 @@ import com.github.pagehelper.PageInfo;
  */
 public interface ICorporationService extends IBaseService<Long, Corporation> {
 
-    PageInfo<Corporation> getPage(Integer pageNumber, Integer pageSize);
 
     /**
      * 根据公司名称获取公司实体，精确查询

@@ -18,13 +18,6 @@ public class NewsServiceImpl implements INewsService {
 
     private final INewsDao newsDao;
 
-    @Override
-    public PageInfo<News> getPage(Integer pageNumber, Integer pageSize) {
-        PageHelper.startPage(pageNumber, pageSize);
-        //List<News> list = newsDao.getUsers(News);
-        List<News> list = null;
-        return PageInfo.of(list);
-    }
 
     @Override
     public News getById(Long id) {

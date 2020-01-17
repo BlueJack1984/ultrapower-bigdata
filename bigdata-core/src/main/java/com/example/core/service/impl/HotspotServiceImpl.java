@@ -20,10 +20,6 @@ public class HotspotServiceImpl implements IHotspotService {
     private final IUserDao userDao;
 
 
-    @Override
-    public PageInfo<Hotspot> getPage(Integer pageNumber, Integer pageSize) {
-        return null;
-    }
 
     @Override
     public Hotspot getById(Long id) {

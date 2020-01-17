@@ -7,5 +7,4 @@ import com.github.pagehelper.PageInfo;
 
 public interface IDictionaryService extends IBaseService<Long, Dictionary> {
 
-    PageInfo<Dictionary> getPage(Integer pageNumber, Integer pageSize);
 }

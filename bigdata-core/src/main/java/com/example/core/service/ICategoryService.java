@@ -7,5 +7,4 @@ import com.github.pagehelper.PageInfo;
 
 public interface ICategoryService extends IBaseService<Long, Category> {
 
-    PageInfo<Category> getPage(Integer pageNumber, Integer pageSize);
 }

@@ -20,11 +20,6 @@ public class CorporationServiceImpl implements ICorporationService {
     private final IUserDao userDao;
 
 
-    @Override
-    public PageInfo<Corporation> getPage(Integer pageNumber, Integer pageSize) {
-        return null;
-    }
-
     /**
      * 根据公司名称获取公司实体，精确查询
      * @param corporationName

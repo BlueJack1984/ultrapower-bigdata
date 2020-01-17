@@ -6,5 +6,4 @@ import com.github.pagehelper.PageInfo;
 
 public interface INewsService extends IBaseService<Long, News> {
 
-    PageInfo<News> getPage(Integer pageNumber, Integer pageSize);
 }

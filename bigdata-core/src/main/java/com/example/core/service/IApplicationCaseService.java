@@ -9,7 +9,6 @@ import java.util.List;
 
 public interface IApplicationCaseService extends IBaseService<Long, ApplicationCase> {
 
-    PageInfo<ApplicationCase> getPage(Integer pageNumber, Integer pageSize);
 
 
 

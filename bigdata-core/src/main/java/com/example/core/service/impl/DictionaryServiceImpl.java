@@ -21,11 +21,6 @@ public class DictionaryServiceImpl implements IDictionaryService {
 
 
     @Override
-    public PageInfo<Dictionary> getPage(Integer pageNumber, Integer pageSize) {
-        return null;
-    }
-
-    @Override
     public Dictionary getById(Long id) {
         return null;
     }

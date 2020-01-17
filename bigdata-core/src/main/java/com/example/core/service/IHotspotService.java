@@ -7,5 +7,4 @@ import com.github.pagehelper.PageInfo;
 
 public interface IHotspotService extends IBaseService<Long, Hotspot> {
 
-    PageInfo<Hotspot> getPage(Integer pageNumber, Integer pageSize);
 }

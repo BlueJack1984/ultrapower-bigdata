@@ -23,11 +23,6 @@ public class CategoryServiceImpl implements ICategoryService {
 
 
     @Override
-    public PageInfo<Category> getPage(Integer pageNumber, Integer pageSize) {
-        return null;
-    }
-
-    @Override
     public Category getById(Long id) {
         return null;
     }

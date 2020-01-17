@@ -23,12 +23,6 @@ public class ApplicationCaseServiceImpl implements IApplicationCaseService {
     private final IApplicationCaseDao applicationCaseDao;
 
 
-    @Override
-    public PageInfo<ApplicationCase> getPage(Integer pageNumber, Integer pageSize) {
-        return null;
-    }
-
-
 
     @Override
     public ApplicationCase getById(Long id) {
