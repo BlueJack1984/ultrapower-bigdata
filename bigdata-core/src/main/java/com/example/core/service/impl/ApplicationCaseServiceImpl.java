@@ -15,6 +15,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * 成功案例服务模块
+ * @author daniel
+ * @date 2019-12-30
+ */
 @Service
 @Slf4j
 @RequiredArgsConstructor

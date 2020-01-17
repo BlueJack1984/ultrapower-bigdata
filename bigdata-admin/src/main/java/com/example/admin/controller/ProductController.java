@@ -62,7 +62,7 @@ public class ProductController {
     @PostMapping("/add")
     public OutputResult<Product> add(@RequestBody @Valid ProductInput productInput) throws ApplicationException{
 
-        productService.getPage(null, null);
+        //productService.getPage(null, null);
         Product product = null;
         return new OutputResult<>(product);
     }

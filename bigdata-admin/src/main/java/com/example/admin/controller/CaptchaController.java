@@ -8,12 +8,12 @@ import com.example.core.utils.CaptchaUtil;
 import com.example.core.utils.RedisKeyUtil;
 import com.example.core.utils.RedisUtil;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 获取验证码模块
@@ -43,6 +43,15 @@ public class CaptchaController {
      */
     private final IRabbitmqService rabbitmqService;
 
+
+    /**
+     * 根据id获取特定公司信息
+     * @param id 公司id
+     * @return 返回公司信息
+     */
+    @ApiOperation(value = "用户登录功能实现", notes = "用户登录功能实现")
+    @ApiImplicitParams({@ApiImplicitParam(paramType = "body", dataType = "LoginInput", name = "loginInput", value = "登录输入参数", required = true)})
+    @CrossOrigin
     @GetMapping("/generate/{count}")
     public OutputResult<CaptchaResult> generate(@PathVariable("count") Integer count) throws ApplicationException {
 

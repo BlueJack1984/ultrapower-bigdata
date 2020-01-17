@@ -13,6 +13,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * 分类服务模块
+ * @author daniel
+ * @date 2019-12-30
+ */
 @Service
 @Slf4j
 @RequiredArgsConstructor
