@@ -5,6 +5,7 @@ import com.example.core.entity.ApplicationCase;
 import com.example.core.entity.FashionCatalog;
 import com.example.core.entity.Product;
 import com.example.core.entity.Solution;
+import com.example.core.exception.ApplicationException;
 import com.example.core.service.IApplicationCaseService;
 import com.example.core.service.IFashionCatalogService;
 import com.example.core.service.IProductService;
@@ -58,7 +59,7 @@ public class FashionCatalogServiceImpl implements IFashionCatalogService {
      ***************************************************************************************/
 
     @Override
-    public Map<String, Object> getListByConditionPage(String keyword, Integer offset, Integer pageSize) {
+    public Map<String, Object> getListByConditionPage(String keyword, Integer offset, Integer pageSize) throws ApplicationException{
 
         //分页操作
         Page<FashionCatalog> page = PageHelper.startPage(offset, pageSize);
@@ -88,7 +89,7 @@ public class FashionCatalogServiceImpl implements IFashionCatalogService {
         return result;
     }
 
-    private Map<String, Object> getListByGroup(Map<String, List<Long>> map) {
+    private Map<String, Object> getListByGroup(Map<String, List<Long>> map) throws ApplicationException {
 
         Map<String, Object> collection = new HashMap<>();
         //产品
