@@ -23,6 +23,7 @@ public enum ResponseCode {
 
 
     CORPORATION_NOT_EXIST_ERROR(300, "公司信息不存在"),
+    CORPORATION_ALREADY_EXIST_ERROR(301, "公司信息已经存在"),
 
 
     IMAGE_NOT_EXIST_ERROR(400, "上传的图片不存在"),

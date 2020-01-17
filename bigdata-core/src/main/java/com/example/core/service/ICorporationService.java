@@ -21,6 +21,7 @@ public interface ICorporationService extends IBaseService<Long, Corporation> {
      */
     Corporation getByName(String corporationName);
 
+    Corporation getByCode(String registrationCode);
     /**
      *
      * @param corporationName
@@ -28,5 +29,8 @@ public interface ICorporationService extends IBaseService<Long, Corporation> {
      */
     //暂时不成熟，需要复用，后面考虑
     Corporation addInformation(String corporationName);
+
+
+
 
 }

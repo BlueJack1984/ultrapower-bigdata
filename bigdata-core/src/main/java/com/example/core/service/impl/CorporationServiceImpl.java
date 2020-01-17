@@ -36,6 +36,11 @@ public class CorporationServiceImpl implements ICorporationService {
     }
 
     @Override
+    public Corporation getByCode(String registrationCode) {
+        return null;
+    }
+
+    @Override
     public Corporation addInformation(String corporationName) {
         return null;
     }

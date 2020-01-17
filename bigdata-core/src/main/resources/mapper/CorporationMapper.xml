@@ -11,7 +11,8 @@
     _corporation.registration_date registrationDate, _corporation.business_condition businessCondition,
     _corporation.domain, _corporation.nature, _corporation.address,
     _corporation.contact_person contactPerson, _corporation.phone, _corporation.telephone,
-    _corporation.email, _corporation.website, _corporation.introduction
+    _corporation.email, _corporation.website, _corporation.introduction,
+    _corporation.registration_code registrationCode
   </sql>
   <sql id="t_corporation">
     corporation

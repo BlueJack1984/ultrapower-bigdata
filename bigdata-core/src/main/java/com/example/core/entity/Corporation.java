@@ -22,6 +22,10 @@ public class Corporation extends BaseModel {
      */
     private String name;
     /**
+     * 社会统一信用代码
+     */
+    private String registrationCode;
+    /**
      * 注册国家
      */
     private String country;
