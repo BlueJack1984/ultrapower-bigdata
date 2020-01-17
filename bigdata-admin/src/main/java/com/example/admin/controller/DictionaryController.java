@@ -1,7 +1,9 @@
 package com.example.admin.controller;
 
+import com.example.admin.dto.response.OutputListResult;
 import com.example.admin.dto.response.OutputResult;
 import com.example.core.entity.Dictionary;
+import com.example.core.exception.ApplicationException;
 import com.example.core.service.IDictionaryService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -9,7 +11,10 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 企业申请信息的审核模块
@@ -39,4 +44,10 @@ public class DictionaryController {
         return null;
     }
 
+    public OutputListResult<Dictionary> getListByCondition(
+            @RequestParam(value = "targetType", required = true) Integer targetType) throws ApplicationException {
+
+        List<Dictionary> dictionaryList = null;
+        return new OutputListResult<>(dictionaryList);
+    }
 }
