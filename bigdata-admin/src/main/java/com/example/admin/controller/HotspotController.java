@@ -3,6 +3,7 @@ package com.example.admin.controller;
 import com.example.admin.dto.request.HotspotInput;
 import com.example.admin.dto.response.OutputResult;
 import com.example.core.entity.Hotspot;
+import com.example.core.exception.ApplicationException;
 import com.example.core.service.IHotspotService;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,7 @@ public class HotspotController {
     private final IHotspotService hotspotService;
 
     @GetMapping("/get/{id}")
-    public OutputResult<Hotspot> getById(@PathVariable("id") Long id) {
+    public OutputResult<Hotspot> getById(@PathVariable("id") Long id) throws ApplicationException {
 
         //判断参数是否为空
         if(null == id) {
@@ -38,7 +39,7 @@ public class HotspotController {
     }
 
     @PostMapping("/add")
-    public OutputResult<Hotspot> add(@RequestBody @Valid HotspotInput hotspotInput) {
+    public OutputResult<Hotspot> add(@RequestBody @Valid HotspotInput hotspotInput) throws ApplicationException{
         Hotspot hotspot = null;
         return new OutputResult<>(hotspot);
     }

@@ -161,7 +161,7 @@ public class UserServiceImpl implements IUserService {
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void add(User entity) {
+    public void add(User entity) throws ApplicationException{
         //这里对entity实体进行处理
         userDao.insert(entity);
     }

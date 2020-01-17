@@ -42,7 +42,7 @@ public class ProductController {
     @ApiImplicitParams({ @ApiImplicitParam(paramType="path", name = "id", value = "大数据产品id", required = true, dataType = "Long")})
     @CrossOrigin
     @GetMapping("/get/{id}")
-    public OutputResult<Product> getById(@PathVariable("id") Long id) {
+    public OutputResult<Product> getById(@PathVariable("id") Long id) throws ApplicationException{
 
         //id值不为空，否则无法请求
         Product product = productService.getById(id);
@@ -60,7 +60,7 @@ public class ProductController {
     @ApiImplicitParams({ @ApiImplicitParam(paramType="path", name = "id", value = "大数据产品id", required = true, dataType = "Long")})
     @CrossOrigin
     @PostMapping("/add")
-    public OutputResult<Product> add(@RequestBody @Valid ProductInput productInput) {
+    public OutputResult<Product> add(@RequestBody @Valid ProductInput productInput) throws ApplicationException{
 
         productService.getPage(null, null);
         Product product = null;
@@ -94,7 +94,7 @@ public class ProductController {
     @ApiImplicitParams({ @ApiImplicitParam(paramType="path", name = "id", value = "产品id", required = true, dataType = "Long")})
     @CrossOrigin
     @GetMapping("/get/list/page")
-    public OutputListResult<Product> getListByConditionPage() {
+    public OutputListResult<Product> getListByConditionPage() throws ApplicationException {
 
         PageInfo<Product> pageInfo = null;
         return new OutputListResult<>(pageInfo);

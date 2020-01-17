@@ -1,5 +1,6 @@
 package com.example.admin.controller;
 
+import com.example.core.exception.ApplicationException;
 import com.example.core.service.ISequenceService;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,7 @@ public class SequenceController {
     private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @GetMapping("/get")
-    public void get() {
+    public void get() throws ApplicationException {
         log.info("进入测试序列号模块！");
         try {
             SDF.parse("null");

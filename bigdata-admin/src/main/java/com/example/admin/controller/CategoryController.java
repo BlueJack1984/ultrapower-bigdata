@@ -2,6 +2,7 @@ package com.example.admin.controller;
 
 import com.example.admin.dto.response.OutputResult;
 import com.example.core.entity.Category;
+import com.example.core.exception.ApplicationException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -26,7 +27,7 @@ public class CategoryController {
     @ApiImplicitParams({@ApiImplicitParam(paramType = "body", dataType = "LoginInput", name = "loginInput", value = "登录输入参数", required = true)})
     @CrossOrigin
     @GetMapping("/get/{id}")
-    public OutputResult<Category> getById(@PathVariable("id") Long id) {
+    public OutputResult<Category> getById(@PathVariable("id") Long id) throws ApplicationException {
         Category category = null;
         return new OutputResult<>(category);
     }

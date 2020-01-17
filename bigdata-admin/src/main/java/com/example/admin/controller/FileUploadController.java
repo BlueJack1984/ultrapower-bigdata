@@ -274,7 +274,7 @@ public class FileUploadController {
      * @return
      */
     @PostMapping("/documents")
-    public OutputResult<Void> uploadDocument(@RequestParam("documents") MultipartFile[] documents) {
+    public OutputResult<Void> uploadDocument(@RequestParam("documents") MultipartFile[] documents) throws ApplicationException{
 
         for(MultipartFile documentFile : documents) {
 
@@ -309,7 +309,7 @@ public class FileUploadController {
      * @return
      */
     @PostMapping("/images")
-    public OutputResult<List<String>> uploadImage(@RequestParam("images") MultipartFile[] images) {
+    public OutputResult<List<String>> uploadImage(@RequestParam("images") MultipartFile[] images) throws ApplicationException{
 
         List<String> imageUrlList = new ArrayList<>();
         for(MultipartFile imageFile : images) {

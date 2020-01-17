@@ -3,6 +3,7 @@ package com.example.admin.controller;
 import com.example.admin.dto.response.OutputListResult;
 import com.example.admin.dto.response.OutputResult;
 import com.example.core.entity.Solution;
+import com.example.core.exception.ApplicationException;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,13 +25,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class SolutionController {
 
     @GetMapping("/get/{id}")
-    public OutputResult<Solution> getById(@PathVariable("id") Long id) {
+    public OutputResult<Solution> getById(@PathVariable("id") Long id) throws ApplicationException {
 
         return null;
     }
 
     @GetMapping("/get/list/page")
-    public OutputListResult<Solution> getListPage() {
+    public OutputListResult<Solution> getListPage() throws ApplicationException {
         return null;
     }
 }

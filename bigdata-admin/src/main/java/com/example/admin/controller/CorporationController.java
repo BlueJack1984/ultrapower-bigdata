@@ -39,7 +39,7 @@ public class CorporationController {
     @ApiImplicitParams({ @ApiImplicitParam(paramType="path", name = "id", value = "公司id", required = true, dataType = "Long")})
     @CrossOrigin
     @GetMapping("/get/{id}")
-    public OutputResult<Corporation> getById(@PathVariable("id") Long id) {
+    public OutputResult<Corporation> getById(@PathVariable("id") Long id) throws ApplicationException{
 
         Corporation corporation = corporationService.getById(id);
         return new OutputResult<>(corporation);

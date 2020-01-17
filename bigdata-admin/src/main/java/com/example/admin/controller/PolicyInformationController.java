@@ -2,6 +2,7 @@ package com.example.admin.controller;
 
 import com.example.admin.dto.response.OutputResult;
 import com.example.core.entity.PolicyInformation;
+import com.example.core.exception.ApplicationException;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class PolicyInformationController {
 
     @GetMapping("/get/{id}")
-    public OutputResult<PolicyInformation> getById(@PathVariable("id") Long id) {
+    public OutputResult<PolicyInformation> getById(@PathVariable("id") Long id) throws ApplicationException {
 
         return null;
     }

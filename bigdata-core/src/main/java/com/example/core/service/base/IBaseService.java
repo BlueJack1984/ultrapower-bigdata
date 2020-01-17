@@ -1,6 +1,8 @@
 package com.example.core.service.base;
 
 
+import com.example.core.exception.ApplicationException;
+
 /**
  * 基础服务
  * @author daniel
@@ -29,5 +31,5 @@ public interface IBaseService<K, V> {
      * @param entity 实体信息，可能包括id
      * @return 无返回
      */
-     void add(V entity);
+     void add(V entity) throws ApplicationException;
 }

@@ -2,6 +2,7 @@ package com.example.admin.controller;
 
 import com.example.admin.dto.response.CaptchaResult;
 import com.example.admin.dto.response.OutputResult;
+import com.example.core.exception.ApplicationException;
 import com.example.core.service.IRabbitmqService;
 import com.example.core.utils.CaptchaUtil;
 import com.example.core.utils.RedisKeyUtil;
@@ -43,7 +44,7 @@ public class CaptchaController {
     private final IRabbitmqService rabbitmqService;
 
     @GetMapping("/generate/{count}")
-    public OutputResult<CaptchaResult> generate(@PathVariable("count") Integer count) {
+    public OutputResult<CaptchaResult> generate(@PathVariable("count") Integer count) throws ApplicationException {
 
         CaptchaResult captchaResult = new CaptchaResult();
         String captchaKey = redisKeyUtil.generateCaptchaKey();

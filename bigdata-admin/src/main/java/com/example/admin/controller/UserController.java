@@ -52,7 +52,7 @@ public class UserController {
     @ApiImplicitParams({ @ApiImplicitParam(paramType="path", name = "id", value = "用户id", required = true, dataType = "Long")})
     @GetMapping("/get/{id}")
     @CrossOrigin
-    public OutputResult<User> getById(@PathVariable("id") Long id) {
+    public OutputResult<User> getById(@PathVariable("id") Long id) throws ApplicationException{
         User user = userService.getById(id);
         return new OutputResult<>(user);
     }
@@ -142,13 +142,13 @@ public class UserController {
     @ApiOperation(value = "修改用户信息", notes = "修改用户信息")
     @ApiImplicitParams({@ApiImplicitParam(paramType = "body", dataType = "UserInput", name = "userInput", value = "修改的用户信息", required = true)})
     @CrossOrigin
-    @PostMapping("/information/modify")
+    @PostMapping("/modify/information")
     public OutputResult<User> modifyInformation(@RequestBody UserInput userInput) throws ApplicationException{
 
         //判断账号参数
         String account = userInput.getAccount();
         if(StringUtils.isEmpty(account)) {
-            log.error("用户账号参数为空");
+            log.error("【用户管理模块：修改用户信息接口-用户账号参数为空】");
             return new OutputResult<>(ResponseCode.USER_REQUEST_PARAMETER_ERROR);
         }
         //根据账号查询用户
@@ -182,42 +182,42 @@ public class UserController {
         @ApiImplicitParam(paramType = "body", dataType = "String", name = "confirmPassword", value = "确认密码", required = true)
     })
     @CrossOrigin
-    @PostMapping("/password/modify")
+    @PostMapping("/modify/password")
     public OutputResult<Void> modifyPassword(
             @RequestHeader(value = "userId",required = true) Long userId,
             @RequestParam(value = "originalPassword",required = true) String originalPassword,
             @RequestParam(value = "newPassword",required = true) String newPassword,
-            @RequestParam(value = "confirmPassword",required = true) String confirmPassword) {
+            @RequestParam(value = "confirmPassword",required = true) String confirmPassword) throws ApplicationException{
 
         //判断数据是否为空
         if(StringUtils.isEmpty(originalPassword) || StringUtils.isEmpty(newPassword) || StringUtils.isEmpty(confirmPassword)) {
-            log.error("");
-            return new OutputResult<>();
+            log.error("【用户管理模块：修改密码接口-原始密码、新密码、确认密码至少有一个为空】");
+            return new OutputResult<>(ResponseCode.USER_REQUEST_PARAMETER_ERROR);
         }
         //查询当前用户信息
         User user = userService.getById(userId);
         if(null == user) {
-            log.error(null);
-            return new OutputResult<>();
+            log.error("【用户管理模块：修改密码接口-数据库中不存在当前用户】");
+            return new OutputResult<>(ResponseCode.USER_NOT_EXIST_ERROR);
         }
         //判断原始密码是否相同
         String encryptedPassword = desUtil.encrypt(originalPassword);
         String storedPassword = user.getPassword();
         if(! encryptedPassword.equals(storedPassword)) {
-            log.error("");
-            return new OutputResult<>();
+            log.error("【用户管理模块：修改密码接口-原始密码输入错误】");
+            return new OutputResult<>(ResponseCode.USER_PASSWORD_ERROR);
         }
         //判断新密码与确认密码是否相同
         if(! newPassword.equals(confirmPassword)) {
-            log.error("");
-            return new OutputResult<>();
+            log.error("【用户管理模块：修改密码接口-新密码与确认密码不一致】");
+            return new OutputResult<>(ResponseCode.USER_PASSWORD_CONFIRM_ERROR);
         }
         String encryptedNewPassword = desUtil.encrypt(newPassword);
         //存入数据库中
-        //userService.modifyInformation()
         user.setPassword(encryptedNewPassword);
         user.setUpdateTime(new Date());
         userService.modifyById(user);
+        //返回成功标志
         return new OutputResult<>();
     }
 
@@ -229,8 +229,8 @@ public class UserController {
     @ApiOperation(value = "重置用户密码信息", notes = "重置用户密码信息")
     @ApiImplicitParams({@ApiImplicitParam(paramType = "url", dataType = "Long", name = "userId", value = "用户id", required = true)})
     @CrossOrigin
-    @GetMapping("/password/reset/{userId}")
-    public OutputResult<User> resetPassword(@PathVariable(value = "userId",required = true) Long userId) {
+    @GetMapping("/reset/password/{userId}")
+    public OutputResult<User> resetPassword(@PathVariable(value = "userId",required = true) Long userId) throws ApplicationException{
 
         //查询用户信息
         User user = userService.getById(userId);
@@ -260,10 +260,10 @@ public class UserController {
     @ApiOperation(value = "修改用户状态信息", notes = "修改用户状态信息，包括锁定，删除等功能")
     @ApiImplicitParams({@ApiImplicitParam(paramType = "url", dataType = "Integer", name = "level", value = "用户状态值", required = true)})
     @CrossOrigin
-    @GetMapping("/status/modify")
+    @GetMapping("/modify/status")
     public OutputResult<User> modifyStatus(
             @RequestParam(value = "userId",required = true) Long userId,
-            @RequestParam(value = "status",required = true) Integer status) {
+            @RequestParam(value = "status",required = true) Integer status) throws ApplicationException{
 
         //判断参数值
         if(null == userId || null == status || status > 6 || status < 0) {
