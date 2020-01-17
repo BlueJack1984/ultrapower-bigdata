@@ -6,6 +6,7 @@ import com.example.admin.dto.response.LoginResult;
 import com.example.admin.dto.response.OutputResult;
 import com.example.core.constants.ResponseCode;
 import com.example.core.entity.User;
+import com.example.core.exception.ApplicationException;
 import com.example.core.service.IUserService;
 import com.example.core.utils.DESUtil;
 import com.example.core.utils.PhoneFormatCheckUtil;
@@ -43,7 +44,7 @@ public class SecurityController {
      * 和数据库比对如果无误的话，签发token，并返回给前端。
      */
     @PostMapping("/login")
-    public OutputResult<LoginResult> login(@RequestBody @Valid LoginInput loginInput) {
+    public OutputResult<LoginResult> login(@RequestBody @Valid LoginInput loginInput) throws ApplicationException {
 
         String account = loginInput.getAccount();
         User user = userService.getByAccount(account);
@@ -81,8 +82,9 @@ public class SecurityController {
      * 账号注销
      */
     @GetMapping("/logout")
-    public OutputResult<String> logout(@RequestHeader(value = "currentUserId") Long currentUserId,
-                                       @RequestHeader(value = "loginKey") String loginKey) {
+    public OutputResult<String> logout(
+            @RequestHeader(value = "currentUserId") Long currentUserId,
+            @RequestHeader(value = "loginKey") String loginKey) throws ApplicationException{
         //删除redis中记录的登录信息键值对
         //String redisLoginKey = currentUserId.toString();
         String redisLoginKey = loginKey;
@@ -95,7 +97,7 @@ public class SecurityController {
      * 用户数据验证登录结果,返回注册成功结果
      */
     @PostMapping("/register")
-    public OutputResult<Void> register(@RequestBody @Valid RegisterInput registerInput) {
+    public OutputResult<Void> register(@RequestBody @Valid RegisterInput registerInput) throws ApplicationException{
 
         //手机号作为账号，格式验证
         String phoneNumber = registerInput.getPhoneNumber();
