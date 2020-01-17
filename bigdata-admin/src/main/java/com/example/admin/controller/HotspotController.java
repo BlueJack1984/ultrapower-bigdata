@@ -24,7 +24,7 @@ import javax.validation.Valid;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/audit")
+@RequestMapping("/hotspot")
 public class HotspotController {
 
     private final IHotspotService hotspotService;

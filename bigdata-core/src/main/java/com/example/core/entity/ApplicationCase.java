@@ -13,6 +13,7 @@ import java.util.Date;
  * @author daniel
  * @date 2019-12-27
  */
+//@Document(indexName = "applicationCase")
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
