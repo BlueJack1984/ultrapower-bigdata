@@ -53,6 +53,8 @@ public class UserController {
     @GetMapping("/get/{id}")
     @CrossOrigin
     public OutputResult<User> getById(@PathVariable("id") Long id) throws ApplicationException{
+        //查询用户
+        //User user = null;
         User user = userService.getById(id);
         return new OutputResult<>(user);
     }
