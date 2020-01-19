@@ -2,6 +2,8 @@ package com.example.admin.controller.unit;
 
 import com.example.admin.dto.response.OutputListResult;
 import com.example.core.exception.ApplicationException;
+import com.example.core.service.ISearchService;
+import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 public class SearchController {
 
 
+    private final ISearchService searchService;
 
     /**
      * 添加单个用户信息
@@ -45,6 +48,7 @@ public class SearchController {
         @ApiImplicitParam(paramType = "body", dataType = "LoginInput", name = "applicationFieldId", value = "登录输入参数", required = true),
         @ApiImplicitParam(paramType = "body", dataType = "LoginInput", name = "districtId", value = "登录输入参数", required = true),
         @ApiImplicitParam(paramType = "body", dataType = "LoginInput", name = "certificationStatus", value = "登录输入参数", required = true),
+        @ApiImplicitParam(paramType = "body", dataType = "LoginInput", name = "keyword", value = "登录输入参数", required = true),
         @ApiImplicitParam(paramType = "body", dataType = "LoginInput", name = "offSet", value = "登录输入参数", required = true),
         @ApiImplicitParam(paramType = "body", dataType = "LoginInput", name = "pageSize", value = "登录输入参数", required = true)
     })
@@ -57,10 +61,14 @@ public class SearchController {
             @RequestParam(value = "applicationFieldId", required = false) Long applicationFieldId,
             @RequestParam(value = "districtId", required = false) Long districtId,
             @RequestParam(value = "certificationStatus", required = false) Integer certificationStatus,
+            @RequestParam(value = "keyword", required = false) Integer keyword,
             @RequestParam(value = "offSet",required = false, defaultValue = "1") Integer offSet,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) throws ApplicationException {
 
 
-        return null;
+
+        PageInfo<Void> pageInfo = null;
+        searchService.search();
+        return new OutputListResult<>(pageInfo);
     }
 }

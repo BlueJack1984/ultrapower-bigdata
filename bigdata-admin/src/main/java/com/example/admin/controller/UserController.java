@@ -290,4 +290,5 @@ public class UserController {
         userService.modifyById(user);
         return new OutputResult<>();
     }
+
 }

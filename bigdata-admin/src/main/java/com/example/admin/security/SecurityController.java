@@ -148,4 +148,61 @@ public class SecurityController {
         //返回成功结果
         return new OutputResult<>();
     }
+
+    /**
+     * 忘记密码接口
+     * 用户数据验证登录结果,返回注册成功结果
+     */
+    @PostMapping("/forget/password")
+    public OutputResult<Void> forgetPassword(@RequestBody @Valid RegisterInput registerInput) throws ApplicationException{
+
+        //手机号作为账号，格式验证
+        String phoneNumber = registerInput.getPhoneNumber();
+        try {
+            Boolean validationResult = phoneFormatCheckUtil.isPhoneLegal(phoneNumber);
+            if(! validationResult) {
+                log.error("【user：注册接口中-输入的手机号码格式不合法】");
+                return new OutputResult<>(ResponseCode.USER_REGISTER_PHONE_ILLEGAL);
+            }
+        }catch (Exception ex) {
+            log.error("【user：注册接口中-输入的账号信息不是手机号】");
+            return new OutputResult<>(ResponseCode.USER_REGISTER_PHONE_ERROR);
+        }
+        //手机号是否已经注册
+        User storedUser = userService.getByAccount(phoneNumber);
+        if(null != storedUser) {
+            log.error("【user：注册接口中-输入的账号(手机号)已经被注册】");
+            return new OutputResult<>(ResponseCode.USER_ACCOUNT_REGISTERED_ERROR);
+        }
+        //输入密码与确认密码是否一致
+        String password = registerInput.getPassword();
+        String confirmPassword = registerInput.getConfirmPassword();
+        if(! password.equals(confirmPassword)) {
+            log.error("【user：注册接口中-输入密码与确认密码不一致】");
+            return new OutputResult<>(ResponseCode.USER_PASSWORD_CONFIRM_ERROR);
+        }
+        //验证码是否正确
+        String captcha = registerInput.getCaptcha();
+        String storedCaptcha = redisUtil.get(registerInput.getCaptchaKey(), String.class);
+        if(! captcha.equals(storedCaptcha)) {
+            log.error("【user：注册接口中-验证码输入错误】");
+            return new OutputResult<>(ResponseCode.USER_CAPTCHA_ERROR);
+        }
+        //各项信息正确
+        //密码加密
+        String encryptedPassword = desUtil.encrypt(password);
+        //将注册信息存入数据库
+        User user = new User();
+        user.setAccount(phoneNumber);
+        user.setPassword(encryptedPassword);
+        user.setStatus(0);
+        user.setTargetType(0);
+        user.setCreateTime(new Date());
+        user.setUpdateTime(new Date());
+        userService.add(user);
+        //将redis中的对应键值对删除, 不删除也可以，到期自动消失
+        redisUtil.delete(registerInput.getCaptchaKey());
+        //返回成功结果
+        return new OutputResult<>();
+    }
 }
