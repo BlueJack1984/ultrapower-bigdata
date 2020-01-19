@@ -144,8 +144,10 @@ public class UserController {
     @ApiOperation(value = "修改用户信息", notes = "修改用户信息")
     @ApiImplicitParams({@ApiImplicitParam(paramType = "body", dataType = "UserInput", name = "userInput", value = "修改的用户信息", required = true)})
     @CrossOrigin
-    @PostMapping("/modify/information")
-    public OutputResult<User> modifyInformation(@RequestBody UserInput userInput) throws ApplicationException{
+    @PostMapping("/modify/information/{id}")
+    public OutputResult<User> modifyInformation(
+            @PathVariable("id") Long id,
+            @RequestBody UserInput userInput) throws ApplicationException{
 
         //判断账号参数
         String account = userInput.getAccount();
@@ -225,23 +227,23 @@ public class UserController {
 
     /**
      * 重置用户密码信息
-     * @param userId 用户id
+     * @param id 用户id
      * @return 返回修改成功消息
      */
     @ApiOperation(value = "重置用户密码信息", notes = "重置用户密码信息")
     @ApiImplicitParams({@ApiImplicitParam(paramType = "url", dataType = "Long", name = "userId", value = "用户id", required = true)})
     @CrossOrigin
-    @GetMapping("/reset/password/{userId}")
-    public OutputResult<User> resetPassword(@PathVariable(value = "userId",required = true) Long userId) throws ApplicationException{
+    @GetMapping("/reset/password/{id}")
+    public OutputResult<User> resetPassword(@PathVariable(value = "id",required = true) Long id) throws ApplicationException{
 
         //查询用户信息
-        User user = userService.getById(userId);
+        User user = userService.getById(id);
         if(null == user) {
-            log.error("");
-            return new OutputResult<>();
+            log.error("【用户管理模块：重置密码接口-数据库中不存在当前用户】");
+            return new OutputResult<>(ResponseCode.USER_NOT_EXIST_ERROR);
         }
         //设置默认密码
-        String defaultPassword = "";
+        String defaultPassword = "888888";
         String encryptedDefaultPassword = desUtil.encrypt(defaultPassword);
         user.setPassword(encryptedDefaultPassword);
         user.setUpdateTime(new Date());
@@ -255,33 +257,36 @@ public class UserController {
     /**
      * 修改用户状态信息，包括锁定，删除等功能
      * 更改数据库的status字段值实现
-     * @param level 用户状态值
-     * @param level 用户状态值
+     * @param id 用户id
+     * @param status 用户状态值
      * @return 返回修改成功消息
      */
     @ApiOperation(value = "修改用户状态信息", notes = "修改用户状态信息，包括锁定，删除等功能")
-    @ApiImplicitParams({@ApiImplicitParam(paramType = "url", dataType = "Integer", name = "level", value = "用户状态值", required = true)})
+    @ApiImplicitParams({
+        @ApiImplicitParam(paramType = "path", dataType = "Long", name = "id", value = "用户id", required = true),
+        @ApiImplicitParam(paramType = "query", dataType = "Integer", name = "status", value = "用户状态值", required = true)
+    })
     @CrossOrigin
-    @GetMapping("/modify/status")
+    @GetMapping("/modify/status/{id}")
     public OutputResult<User> modifyStatus(
-            @RequestParam(value = "userId",required = true) Long userId,
+            @PathVariable(value = "id",required = true) Long id,
             @RequestParam(value = "status",required = true) Integer status) throws ApplicationException{
 
         //判断参数值
-        if(null == userId || null == status || status > 6 || status < 0) {
-            log.error("");
-            return new OutputResult<>();
+        if(null == status || status > 6 || status < 0) {
+            log.error("【用户管理模块：修改用户状态接口-输入的用户状态值不合法】");
+            return new OutputResult<>(ResponseCode.USER_REQUEST_PARAMETER_ERROR);
         }
         //调用服务
-        User user = userService.getById(userId);
+        User user = userService.getById(id);
         if(null == user) {
-            log.error("");
-            return new OutputResult<>();
+            log.error("【用户管理模块：修改用户状态接口-数据库中不存在当前用户】");
+            return new OutputResult<>(ResponseCode.USER_NOT_EXIST_ERROR);
         }
         //更新数据库
         user.setStatus(status);
         user.setUpdateTime(new Date());
-        //userService.
+
         userService.modifyById(user);
         return new OutputResult<>();
     }
