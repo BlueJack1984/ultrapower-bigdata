@@ -2,6 +2,7 @@ package com.example.admin.controller.unit;
 
 import com.example.admin.dto.response.OutputResult;
 import com.example.core.entity.User;
+import com.example.core.exception.ApplicationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +24,8 @@ public class PersonalController {
      * @return
      */
     @PostMapping("/modify/information")
-    public OutputResult<User> modifyInformation() {
+    public OutputResult<User> modifyInformation(
+            @RequestHeader(value = "userId", required = false) Long id) throws ApplicationException {
         return new OutputResult<>();
     }
 
@@ -33,12 +35,12 @@ public class PersonalController {
      * @return
      */
     @PostMapping("/modify/password")
-    public OutputResult<Void> modifyPassword() {
+    public OutputResult<Void> modifyPassword() throws ApplicationException{
         return new OutputResult<>();
     }
 
     @GetMapping("/get/{id}")
-    public OutputResult<User> getById(@PathVariable("id") Long id) {
+    public OutputResult<User> getById(@PathVariable("id") Long id) throws ApplicationException{
 
         return null;
     }
